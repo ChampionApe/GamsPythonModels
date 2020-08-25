@@ -48,8 +48,8 @@ class gams_model:
 		"""
 		Read in databases, export to work_folder, and add to GamsWorkspace.
 		"""
-		for database in self.model.databases:
-			self.model.databases[database].db_Gdx.export(self.work_folder+'\\'+end_w_gdx(database))
+		for database in self.settings.databases:
+			self.settings.databases[database].db_Gdx.export(self.work_folder+'\\'+end_w_gdx(database))
 			self.dbs[database] = self.ws.add_database_from_gdx(self.work_folder+'\\'+end_w_gdx(database))
 
 	def run(self,model=None,run_from_job=False,options_add={},options_run={}):
@@ -76,21 +76,21 @@ class gams_model:
 			See write_collect_file() for more.
 		(5) The relevant files for running the model are copied to the work_folder, ready to execute.
 		"""
-		self.model = gams_settings
+		self.settings = gams_settings
 		self.upd_databases()
 		self.update_placeholders()
-		if self.model.run_file is None:
+		if self.settings.run_file is None:
 			self.write_run_file()
-		if self.model.collect_file is None:
+		if self.settings.collect_file is None:
 			self.write_collect_file()
-		for file in self.model.files:
+		for file in self.settings.files:
 			if not os.path.isfile(self.work_folder+'\\'+end_w_gms(file)):
-				shutil.copy(self.model.files[file]+'\\'+end_w_gms(file),self.work_folder+'\\'+end_w_gms(file))
+				shutil.copy(self.settings.files[file]+'\\'+end_w_gms(file),self.work_folder+'\\'+end_w_gms(file))
 
 	def compile_collect_file(self):
-		with open(self.work_folder+'\\'+end_w_gms(self.model.collect_file).replace('.gms','.gmy'), "w") as file:
-			file.write(Precompiler(self.work_folder+'\\'+end_w_gms(self.model.collect_file))())
-		return self.work_folder+'\\'+end_w_gms(self.model.collect_file).replace('.gms','.gmy')
+		with open(self.work_folder+'\\'+end_w_gms(self.settings.collect_file).replace('.gms','.gmy'), "w") as file:
+			file.write(Precompiler(self.work_folder+'\\'+end_w_gms(self.settings.collect_file))())
+		return self.work_folder+'\\'+end_w_gms(self.settings.collect_file).replace('.gms','.gmy')
 
 	def add_job(self,options={}):
 		"""
@@ -98,7 +98,7 @@ class gams_model:
 		using Precompiler from the dreamtools package. The GamsJob is added as an attribute self.job.
 		"""
 		self.compile_collect_file()
-		self.job = self.ws.add_job_from_file(self.work_folder+'\\'+end_w_gms(self.model.collect_file).replace('.gms','.gmy'),**options)
+		self.job = self.ws.add_job_from_file(self.work_folder+'\\'+end_w_gms(self.settings.collect_file).replace('.gms','.gmy'),**options)
 		return self.job
 
 	def run_job(self,options={}):
@@ -111,7 +111,7 @@ class gams_model:
 		"""
 		Add placeholders to the options-file.
 		"""
-		[self.add_placeholder(placeholder,self.model.placeholders[placeholder]) for placeholder in self.model.placeholders];
+		[self.add_placeholder(placeholder,self.settings.placeholders[placeholder]) for placeholder in self.settings.placeholders];
 
 	def add_placeholder(self,placeholder,db):
 		"""
@@ -131,18 +131,18 @@ class gams_model:
 		(5) Once the run_file has been written, the attribute is set to the new file name, and added to the dictionary of model instance files.
 		"""
 		with open(self.work_folder+'\\'+'RunFile.gms', "w") as file:
-			if self.model.g_exo is not None:
-				file.write("$FIX {gnames};\n\n".format(gnames=', '.join(self.model.g_exo)))
-			if self.model.g_endo is not None:
-				file.write("$UNFIX {gnames};\n\n".format(gnames=', '.join(self.model.g_endo)))
-			if self.model.blocks is not None:
-				file.write("$Model {mname} {blocks};\n\n".format(mname=self.model.name, blocks=', '.join(self.model.blocks)))
-			if self.model.solve is None:
-				file.write(default_solve(self.model.name))
+			if self.settings.g_exo is not None:
+				file.write("$FIX {gnames};\n\n".format(gnames=', '.join(self.settings.g_exo)))
+			if self.settings.g_endo is not None:
+				file.write("$UNFIX {gnames};\n\n".format(gnames=', '.join(self.settings.g_endo)))
+			if self.settings.blocks is not None:
+				file.write("$Model {mname} {blocks};\n\n".format(mname=self.settings.name, blocks=', '.join(self.settings.blocks)))
+			if self.settings.solve is None:
+				file.write(default_solve(self.settings.name))
 			else:
-				file.write(self.model.solve)
-		self.model.run_file = 'RunFile.gms'
-		self.model.files['RunFile.gms'] = self.work_folder
+				file.write(self.settings.solve)
+		self.settings.run_file = 'RunFile.gms'
+		self.settings.files['RunFile.gms'] = self.work_folder
 
 	def write_collect_file(self):
 		"""
@@ -154,7 +154,7 @@ class gams_model:
 		(4) The attribute self.model.collect_file is updated to point to the collect_file.
 		"""
 		with open(self.work_folder+'\\'+self.execute_name, "w") as file:
-			file.write(self.model.write_collect_and_run_file(self.execute_name))
+			file.write(self.settings.write_collect_and_run_file(self.execute_name))
 
 class mgs:
 	"""
@@ -314,7 +314,7 @@ class gams_model_py:
 	def __init__(self,database,gsettings=None,blocks_text=None,functions=None,groups={},exceptions=[],exceptions_load=[],components = {},export_files = None):
 		self.database = database
 		if gsettings is None:
-			self.model = gams_settings(name=self.database.name,placeholders=self.default_placeholders(),databases={self.database.name: self.database},files={})
+			self.settings = gams_settings(name=self.database.name,placeholders=self.default_placeholders(),databases={self.database.name: self.database},files={})
 		self.groups = groups
 		self.exceptions=exceptions
 		self.exceptions_load = exceptions_load
@@ -360,21 +360,21 @@ class gams_model_py:
 
 	def default_export(self,repo,export_settings=False):
 		self.export_components(self.default_files_components(repo))
-		self.add_default_collect(self.model.name+'_CollectFile.gms',repo)
+		self.add_default_collect(self.settings.name+'_CollectFile.gms',repo)
 		if export_settings:
-			self.model.export(repo,self.model.name)
+			self.settings.export(repo,self.settings.name)
 
 	def add_default_collect(self,name,repo):
 		with open(repo+'\\'+end_w_gms(name),"w") as file:
-			file.write(self.model.write_collect_files(name))
-		self.model.files[end_w_gms(name)] = repo
+			file.write(self.settings.write_collect_files(name))
+		self.settings.files[end_w_gms(name)] = repo
 
 	def default_files_components(self,repo):
-		self.export_files = {self.model.name+'_functions.gms': {'repo': repo, 'components': ['functions']},
-							 self.model.name+'_sets.gms': {'repo': repo, 'components': ['sets','alias','sets_other','alias_other','sets_load']},
-							 self.model.name+'_parameters.gms': {'repo': repo, 'components': ['parameters','parameters_load']},
-							 self.model.name+'_groups.gms': {'repo': repo, 'components': ['groups','groups_load']},
-							 self.model.name+'_blocks.gms': {'repo': repo, 'components': ['blocks']}}
+		self.export_files = {self.settings.name+'_functions.gms': {'repo': repo, 'components': ['functions']},
+							 self.settings.name+'_sets.gms': {'repo': repo, 'components': ['sets','alias','sets_other','alias_other','sets_load']},
+							 self.settings.name+'_parameters.gms': {'repo': repo, 'components': ['parameters','parameters_load']},
+							 self.settings.name+'_groups.gms': {'repo': repo, 'components': ['groups','groups_load']},
+							 self.settings.name+'_blocks.gms': {'repo': repo, 'components': ['blocks']}}
 		return self.export_files
 
 	def export_components(self,files,add_to_settings=True):
@@ -387,7 +387,7 @@ class gams_model_py:
 			with open(files[x]['repo']+'\\'+end_w_gms(x),"w") as file:
 				[file.writelines(self.components[c]) for c in files[x]['components']];
 			if add_to_settings:
-				self.model.files[end_w_gms(x)] = files[x]['repo']
+				self.settings.files[end_w_gms(x)] = files[x]['repo']
 
 	def add_group_to_groups(self,group,gname):
 		self.groups[gname] = {var: self.var_in_group(var,group[var]['conditions']) for var in group}
@@ -492,9 +492,9 @@ class gams_model_py:
 
 	def write_groups_load(self,gdx):
 		out_str = ''
-		for group in self.model.g_endo:
+		for group in self.settings.g_endo:
 			out_str += self.write_group_load(group,gdx,level='level')
-		for group in set(self.groups.keys())-set(self.model.g_endo):
+		for group in set(self.groups.keys())-set(self.settings.g_endo):
 			out_str += self.write_group_load(group,gdx)
 		return out_str
 
