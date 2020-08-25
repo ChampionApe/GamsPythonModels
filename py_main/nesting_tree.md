@@ -8,3 +8,4 @@ The class uses the following naming convention when combining nesting trees:
     * *fg:* Union of inp and out (final goods)
     * *wT:* Union of int and inp (prices with taxes are defined over this)
     * *map_all:* mappings from knots-to-branches in aggregate sector (union of maps for each tree).
+  - *Hep*
