@@ -29,11 +29,13 @@ class nesting_tree:
 		else:
 			raise TypeError("'tree' must be either a string (file-path for excel data), a dictionary (w. tree-structure), or a nesting_tree (python class).")
 
-	def run_all(self,**kwargs):
+	def run_all(self,Q2Ps=None,**kwargs):
 		"""
 		For all nesting trees in self.trees, retrieve information on inputs, aggregates, outputs, and mappings.
 		"""
-		[self.trees[tree].run_all(**kwargs) for tree in self.trees];
+		if Q2Ps is None:
+			Q2Ps = {tree: None for tree in self.trees}
+		[self.trees[tree].run_all(Q2P=Q2Ps[tree],**kwargs) for tree in self.trees];
 		self.aggregate_sector(**kwargs)
 
 	def aggregate_sector(self,**kwargs):
