@@ -10,4 +10,5 @@ The class uses the following naming convention when combining nesting trees:
     * *map_all:* mappings from knots-to-branches in aggregate sector (union of maps for each tree).
   - *self.attr:* For *attr* in {kno_out,kno_inp}, self.attr splits up aggregate sector's knots into the ones from 'output'-type trees, and 'input'-type trees.
   - *self.trees[tree].attr:* For each tree in self.trees, this defines subsets of the aggregate sector sets for {inp,out,int,fg,wT} as defined above. 
-     The naming convention for these attributes are: 't\_'+*self.attr*+*\_tree.name*
+     The naming convention for these attributes are: 't\_'+*self.attr*+*\_tree.name*. 
+  - *self.trees[tree].attr:* For each tree in self.trees, and *attr* in {i_tree_kno, i_tree_kno_no, i_tree_bra_o, i_tree_bra_no}, this defines the individual trees knots/branches. 
