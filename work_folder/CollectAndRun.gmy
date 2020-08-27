@@ -1,0 +1,340 @@
+$ONEOLCOM
+$EOLCOM #
+
+
+# Root File for model
+OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
+;
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_CollectFile.gms
+# ----------------------------------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_functions.gms
+# ----------------------------------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------------------------------
+#  Define function: load_level
+# ----------------------------------------------------------------------------------------------------
+
+
+
+# ----------------------------------------------------------------------------------------------------
+#  Define function: load_fixed
+# ----------------------------------------------------------------------------------------------------
+
+
+;
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_sets.gms
+# ----------------------------------------------------------------------------------------------------
+
+sets
+	n
+	alias_set
+	alias_map2
+;
+
+alias(n,nnn,nn);
+
+sets
+	out[n]
+	kno_inp[n]
+	i_kno_in[n]
+	inp[n]
+	i_bra_no_out[n]
+	wT[n]
+	i_kno_no_in[n]
+	i_kno_out[n]
+	map_test_in[n,nn]
+	i_bra_o_out[n]
+	map_all[n,nn]
+	t_out_in[n]
+	int[n]
+	alias_[alias_set,alias_map2]
+	i_bra_o_in[n]
+	map_test_out[n,nn]
+	i_bra_no_in[n]
+	kno_out[n]
+	fg[n]
+	t_out_out[n]
+;
+$GDXIN %test%
+$onMulti
+$load n
+$load alias_set
+$load alias_map2
+$load out
+$load kno_inp
+$load i_kno_in
+$load inp
+$load i_bra_no_out
+$load wT
+$load i_kno_no_in
+$load i_kno_out
+$load t_out_in
+$load i_bra_o_out
+$load int
+$load i_bra_o_in
+$load i_bra_no_in
+$load t_out_out
+$load fg
+$load kno_out
+$load alias_
+$load map_all
+$load map_test_in
+$load map_test_out
+$GDXIN
+$offMulti
+;
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_parameters.gms
+# ----------------------------------------------------------------------------------------------------
+
+;
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_groups.gms
+# ----------------------------------------------------------------------------------------------------
+
+
+# ---------------------------------------------test_gtech---------------------------------------------
+#  Initialize test_gtech group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+VARIABLE sigma[n] "";
+sigma.L[n]$((kno_inp[n])) = 0;
+VARIABLE eta[n] "";
+eta.L[n]$((kno_out[n])) = 0;
+VARIABLE mark_up[n] "";
+mark_up.L[n]$((out[n])) = 0;
+VARIABLE mu[n,nn] "";
+mu.L[n,nn]$((map_all[n,nn])) = 0;
+$onlisting
+
+
+# ----------------------------------------------test_gexo---------------------------------------------
+#  Initialize test_gexo group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+VARIABLE PwT[n] "";
+PwT.L[n]$((inp[n])) = 0;
+VARIABLE qS[n] "";
+qS.L[n]$((out[n])) = 0;
+$onlisting
+
+
+# ---------------------------------------------test_gendo---------------------------------------------
+#  Initialize test_gendo group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+VARIABLE PbT[n] "";
+PbT.L[n]$((out[n])) = 0;
+VARIABLE qD[n] "";
+qD.L[n]$((wT[n])) = 0;
+$onlisting
+$offlisting
+  
+# --------------------------------------------__load_group--------------------------------------------
+#  Initialize __load_group group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+$onlisting
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    parameter load_PbT[n] "";
+    load_PbT[n]$(((out[n]))) = 0;
+  
+    parameter load_PwT[n] "";
+    load_PwT[n]$(((int[n]))) = 0;
+  
+    parameter load_qD[n] "";
+    load_qD[n]$(((wT[n]))) = 0;
+  
+  execute_load "%test%" 
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+ load_PbT=PbT.l  load_PwT=PwT.l  load_qD=qD.l ;
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    PbT.l[n]$(((out[n]))) = load_PbT[n];
+  
+    PwT.l[n]$(((int[n]))) = load_PwT[n];
+  
+    qD.l[n]$(((wT[n]))) = load_qD[n];
+$onlisting
+;
+$offlisting
+  
+# --------------------------------------------__load_group--------------------------------------------
+#  Initialize __load_group group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+$onlisting
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    parameter load_sigma[n] "";
+    load_sigma[n]$(((kno_inp[n]))) = 0;
+  
+    parameter load_eta[n] "";
+    load_eta[n]$(((kno_out[n]))) = 0;
+  
+    parameter load_mark_up[n] "";
+    load_mark_up[n]$(((out[n]))) = 0;
+  
+    parameter load_mu[n,nn] "";
+    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+  
+  execute_load "%test%" 
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+ load_sigma=sigma.l  load_eta=eta.l  load_mark_up=mark_up.l  load_mu=mu.l ;
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+  
+    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+  
+    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
+  
+    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+$onlisting
+;
+$offlisting
+  
+# --------------------------------------------__load_group--------------------------------------------
+#  Initialize __load_group group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+$onlisting
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    parameter load_PwT[n] "";
+    load_PwT[n]$(((inp[n]))) = 0;
+  
+    parameter load_qS[n] "";
+    load_qS[n]$(((out[n]))) = 0;
+  
+  execute_load "%test%" 
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+ load_PwT=PwT.l  load_qS=qS.l ;
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    PwT.fx[n]$(((inp[n]))) = load_PwT[n];
+  
+    qS.fx[n]$(((out[n]))) = load_qS[n];
+$onlisting
+;
+;
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_blocks.gms
+# ----------------------------------------------------------------------------------------------------
+
+
+# ------------------------------------------------M_in------------------------------------------------
+#  Initialize M_in equation block
+# ----------------------------------------------------------------------------------------------------
+EQUATION E_pindex_o_in[n];
+E_pindex_o_in[n]$(t_out_in[n]).. 	PbT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
+EQUATION E_pindex_no_in[n];
+E_pindex_no_in[n]$(i_kno_no_in[n]).. 	PwT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
+EQUATION E_quant_o_in[n];
+E_quant_o_in[n]$(i_bra_o_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), (mu[n,nn] * (PbT[nn]/PwT[n])**(sigma[nn]) * qS[nn])/sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn] *(PbT[nn]/PwT[nnn])**(sigma[nn])));
+EQUATION E_quant_no_in[n];
+E_quant_no_in[n]$(i_bra_no_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), (mu[n,nn] * (PwT[nn]/PwT[n])**(sigma[nn]) * qD[nn])/sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn] *(PwT[nn]/PwT[nnn])**(sigma[nn])));
+
+# ----------------------------------------------------------------------------------------------------
+#  Define M_in model
+# ----------------------------------------------------------------------------------------------------
+Model M_in /
+E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in
+/;
+
+
+# ------------------------------------------------M_out-----------------------------------------------
+#  Initialize M_out equation block
+# ----------------------------------------------------------------------------------------------------
+EQUATION E_pindex_out[n];
+E_pindex_out[n]$(i_kno_out[n]).. 	PwT[n]  =E=  (sum(nn$(map_test_out[nn,n] and out[nn]), mu[nn,n] * PbT[nn]**(1-eta[n]))+sum(nn$(map_test_out[nn,n] and not out[nn]), mu[nn,n] * PwT[nn]**(1-eta[n])))**(1/(1-eta[n]));
+EQUATION E_quant_o_out[n];
+E_quant_o_out[n]$(i_bra_o_out[n]).. 	qS[n]  =E=  sum(nn$(map_test_out[n,nn]), mu[n,nn] * (PbT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+EQUATION E_quant_no_out[n];
+E_quant_no_out[n]$(i_bra_no_out[n]).. 	qD[n]  =E=  sum(nn$(map_test_out[n,nn]), mu[n,nn] * (PwT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+
+# ----------------------------------------------------------------------------------------------------
+#  Define M_out model
+# ----------------------------------------------------------------------------------------------------
+Model M_out /
+E_pindex_out, E_quant_o_out, E_quant_no_out
+/;
+
+;
+;
+
+# ----------------------------------------------------------------------------------------------------
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\RunFile.gms
+# ----------------------------------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------------------------------$FIX test_gtech, test_gexo;
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
+eta.FX[n]$((kno_out[n])) = eta.L[n];
+mark_up.FX[n]$((out[n])) = mark_up.L[n];
+mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
+PwT.FX[n]$((inp[n])) = PwT.L[n];
+qS.FX[n]$((out[n])) = qS.L[n];
+$onlisting
+
+
+# ----------------------------------------------------------------------------------------------------$UNFIX test_gendo;
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+PbT.lo[n]$((out[n])) = -inf;
+PbT.up[n]$((out[n])) = inf;
+PwT.lo[n]$((int[n])) = -inf;
+PwT.up[n]$((int[n])) = inf;
+qD.lo[n]$((wT[n])) = -inf;
+qD.up[n]$((wT[n])) = inf;
+$onlisting
+
+
+# ----------------------------------------------------------------------------------------------------
+#  Define test model
+# ----------------------------------------------------------------------------------------------------
+Model test /
+E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in, E_pindex_out, E_quant_o_out, E_quant_no_out
+/;
+
+
+solve test using CNS;
+;

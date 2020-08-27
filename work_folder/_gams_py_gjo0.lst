@@ -1,0 +1,398 @@
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   3   
+   4   
+   5  # Root File for model
+   6  OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
+   7  ;
+   8   
+   9  # ----------------------------------------------------------------------------------------------------
+  10  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_CollectFile.gms
+  11  # ----------------------------------------------------------------------------------------------------
+  12   
+  13   
+  14  # ----------------------------------------------------------------------------------------------------
+  15  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_functions.gms
+  16  # ----------------------------------------------------------------------------------------------------
+  17   
+  18   
+  19  # ----------------------------------------------------------------------------------------------------
+  20  #  Define function: load_level
+  21  # ----------------------------------------------------------------------------------------------------
+  22   
+  23   
+  24   
+  25  # ----------------------------------------------------------------------------------------------------
+  26  #  Define function: load_fixed
+  27  # ----------------------------------------------------------------------------------------------------
+  28   
+  29   
+  30  ;
+  31   
+  32  # ----------------------------------------------------------------------------------------------------
+  33  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_sets.gms
+  34  # ----------------------------------------------------------------------------------------------------
+  35   
+  36  sets
+  37          n
+  38          alias_set
+  39          alias_map2
+  40  ;
+  41   
+  42  alias(n,nnn,nn);
+  43   
+  44  sets
+  45          out[n]
+  46          kno_inp[n]
+  47          i_kno_in[n]
+  48          inp[n]
+  49          i_bra_no_out[n]
+  50          wT[n]
+  51          i_kno_no_in[n]
+  52          i_kno_out[n]
+  53          map_test_in[n,nn]
+  54          i_bra_o_out[n]
+  55          map_all[n,nn]
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  56          t_out_in[n]
+  57          int[n]
+  58          alias_[alias_set,alias_map2]
+  59          i_bra_o_in[n]
+  60          map_test_out[n,nn]
+  61          i_bra_no_in[n]
+  62          kno_out[n]
+  63          fg[n]
+  64          t_out_out[n]
+  65  ;
+GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gdb0.gdx
+--- LOAD  n = 3:n
+--- LOAD  alias_set = 1:alias_set
+--- LOAD  alias_map2 = 2:alias_map2
+--- LOAD  out = 8:out
+--- LOAD  kno_inp = 14:kno_inp
+--- LOAD  i_kno_in = 17:i_kno_in
+--- LOAD  inp = 7:inp
+--- LOAD  i_bra_no_out = 25:i_bra_no_out
+--- LOAD  wT = 11:wT
+--- LOAD  i_kno_no_in = 18:i_kno_no_in
+--- LOAD  i_kno_out = 23:i_kno_out
+--- LOAD  t_out_in = 16:t_out_in
+--- LOAD  i_bra_o_out = 24:i_bra_o_out
+--- LOAD  int = 9:int
+--- LOAD  i_bra_o_in = 19:i_bra_o_in
+--- LOAD  i_bra_no_in = 20:i_bra_no_in
+--- LOAD  t_out_out = 22:t_out_out
+--- LOAD  fg = 10:fg
+--- LOAD  kno_out = 13:kno_out
+--- LOAD  alias_ = 6:alias_
+--- LOAD  map_all = 12:map_all
+--- LOAD  map_test_in = 15:map_test_in
+--- LOAD  map_test_out = 21:map_test_out
+  93  ;
+  94   
+  95  # ----------------------------------------------------------------------------------------------------
+  96  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_parameters.gms
+  97  # ----------------------------------------------------------------------------------------------------
+  98   
+  99  ;
+ 100   
+ 101  # ----------------------------------------------------------------------------------------------------
+ 102  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_groups.gms
+ 103  # ----------------------------------------------------------------------------------------------------
+ 104   
+ 105   
+ 106  # ---------------------------------------------test_gtech---------------------------------------------
+ 107  #  Initialize test_gtech group
+ 108  # ----------------------------------------------------------------------------------------------------
+ 119   
+ 120   
+ 121  # ----------------------------------------------test_gexo---------------------------------------------
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 122  #  Initialize test_gexo group
+ 123  # ----------------------------------------------------------------------------------------------------
+ 130   
+ 131   
+ 132  # ---------------------------------------------test_gendo---------------------------------------------
+ 133  #  Initialize test_gendo group
+ 134  # ----------------------------------------------------------------------------------------------------
+ 148   
+ 149  # ----------------------------------------------------------------------------------------------------
+ 150  #  Loop over __load_group
+ 151  # ----------------------------------------------------------------------------------------------------
+ 152   
+ 153      parameter load_PbT[n] "";
+ 154      load_PbT[n]$(((out[n]))) = 0;
+ 155   
+ 156      parameter load_PwT[n] "";
+ 157      load_PwT[n]$(((int[n]))) = 0;
+ 158   
+ 159      parameter load_qD[n] "";
+ 160      load_qD[n]$(((wT[n]))) = 0;
+ 161   
+ 162    execute_load "_gams_py_gdb0"
+ 163  # ----------------------------------------------------------------------------------------------------
+ 164  #  Loop over __load_group
+ 165  # ----------------------------------------------------------------------------------------------------
+ 166   load_PbT=PbT.l  load_PwT=PwT.l  load_qD=qD.l ;
+ 167   
+ 168  # ----------------------------------------------------------------------------------------------------
+ 169  #  Loop over __load_group
+ 170  # ----------------------------------------------------------------------------------------------------
+ 171   
+ 172      PbT.l[n]$(((out[n]))) = load_PbT[n];
+ 173   
+ 174      PwT.l[n]$(((int[n]))) = load_PwT[n];
+ 175   
+ 176      qD.l[n]$(((wT[n]))) = load_qD[n];
+ 178  ;
+ 186   
+ 187  # ----------------------------------------------------------------------------------------------------
+ 188  #  Loop over __load_group
+ 189  # ----------------------------------------------------------------------------------------------------
+ 190   
+ 191      parameter load_sigma[n] "";
+ 192      load_sigma[n]$(((kno_inp[n]))) = 0;
+ 193   
+ 194      parameter load_eta[n] "";
+ 195      load_eta[n]$(((kno_out[n]))) = 0;
+ 196   
+ 197      parameter load_mark_up[n] "";
+ 198      load_mark_up[n]$(((out[n]))) = 0;
+ 199   
+ 200      parameter load_mu[n,nn] "";
+ 201      load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 202   
+ 203    execute_load "_gams_py_gdb0"
+ 204  # ----------------------------------------------------------------------------------------------------
+ 205  #  Loop over __load_group
+ 206  # ----------------------------------------------------------------------------------------------------
+ 207   load_sigma=sigma.l  load_eta=eta.l  load_mark_up=mark_up.l  load_mu=mu.l ;
+ 208   
+ 209  # ----------------------------------------------------------------------------------------------------
+ 210  #  Loop over __load_group
+ 211  # ----------------------------------------------------------------------------------------------------
+ 212   
+ 213      sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+ 214   
+ 215      eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+ 216   
+ 217      mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
+ 218   
+ 219      mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+ 221  ;
+ 229   
+ 230  # ----------------------------------------------------------------------------------------------------
+ 231  #  Loop over __load_group
+ 232  # ----------------------------------------------------------------------------------------------------
+ 233   
+ 234      parameter load_PwT[n] "";
+ 235      load_PwT[n]$(((inp[n]))) = 0;
+ 236   
+ 237      parameter load_qS[n] "";
+ 238      load_qS[n]$(((out[n]))) = 0;
+ 239   
+ 240    execute_load "_gams_py_gdb0"
+ 241  # ----------------------------------------------------------------------------------------------------
+ 242  #  Loop over __load_group
+ 243  # ----------------------------------------------------------------------------------------------------
+ 244   load_PwT=PwT.l  load_qS=qS.l ;
+ 245   
+ 246  # ----------------------------------------------------------------------------------------------------
+ 247  #  Loop over __load_group
+ 248  # ----------------------------------------------------------------------------------------------------
+ 249   
+ 250      PwT.fx[n]$(((inp[n]))) = load_PwT[n];
+ 251   
+ 252      qS.fx[n]$(((out[n]))) = load_qS[n];
+ 254  ;
+ 255  ;
+ 256   
+ 257  # ----------------------------------------------------------------------------------------------------
+ 258  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_blocks.gms
+ 259  # ----------------------------------------------------------------------------------------------------
+ 260   
+ 261   
+ 262  # ------------------------------------------------M_in------------------------------------------------
+ 263  #  Initialize M_in equation block
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 264  # ----------------------------------------------------------------------------------------------------
+ 265  EQUATION E_pindex_o_in[n];
+ 266  E_pindex_o_in[n]$(t_out_in[n])..        PbT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
+ 267  EQUATION E_pindex_no_in[n];
+ 268  E_pindex_no_in[n]$(i_kno_no_in[n])..    PwT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
+ 269  EQUATION E_quant_o_in[n];
+ 270  E_quant_o_in[n]$(i_bra_o_in[n])..       qD[n]  =E=  sum(nn$(map_test_in[n,nn]), (mu[n,nn] * (PbT[nn]/PwT[n])**(sigma[nn]) * qS[nn])/sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn] *(PbT[nn]/PwT[nnn])**(sigma[nn])));
+ 271  EQUATION E_quant_no_in[n];
+ 272  E_quant_no_in[n]$(i_bra_no_in[n])..     qD[n]  =E=  sum(nn$(map_test_in[n,nn]), (mu[n,nn] * (PwT[nn]/PwT[n])**(sigma[nn]) * qD[nn])/sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn] *(PwT[nn]/PwT[nnn])**(sigma[nn])));
+ 273   
+ 274  # ----------------------------------------------------------------------------------------------------
+ 275  #  Define M_in model
+ 276  # ----------------------------------------------------------------------------------------------------
+ 277  Model M_in /
+ 278  E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in
+ 279  /;
+ 280   
+ 281   
+ 282  # ------------------------------------------------M_out-----------------------------------------------
+ 283  #  Initialize M_out equation block
+ 284  # ----------------------------------------------------------------------------------------------------
+ 285  EQUATION E_pindex_out[n];
+ 286  E_pindex_out[n]$(i_kno_out[n])..        PwT[n]  =E=  (sum(nn$(map_test_out[nn,n] and out[nn]), mu[nn,n] * PbT[nn]**(1-eta[n]))+sum(nn$(map_test_out[nn,n] and not out[nn]), mu[nn,n] * PwT[nn]**(1-eta[n])))**(1/(1-eta[n]));
+ 287  EQUATION E_quant_o_out[n];
+ 288  E_quant_o_out[n]$(i_bra_o_out[n])..     qS[n]  =E=  sum(nn$(map_test_out[n,nn]), mu[n,nn] * (PbT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+ 289  EQUATION E_quant_no_out[n];
+ 290  E_quant_no_out[n]$(i_bra_no_out[n])..   qD[n]  =E=  sum(nn$(map_test_out[n,nn]), mu[n,nn] * (PwT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+ 291   
+ 292  # ----------------------------------------------------------------------------------------------------
+ 293  #  Define M_out model
+ 294  # ----------------------------------------------------------------------------------------------------
+ 295  Model M_out /
+ 296  E_pindex_out, E_quant_o_out, E_quant_no_out
+ 297  /;
+ 298   
+ 299  ;
+ 300  ;
+ 301   
+ 302  # ----------------------------------------------------------------------------------------------------
+ 303  #  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\RunFile.gms
+ 304  # ----------------------------------------------------------------------------------------------------
+ 305   
+ 306   
+ 307  # ----------------------------------------------------------------------------------------------------$FIX test_gtech, test_gexo;
+ 308  # ----------------------------------------------------------------------------------------------------
+ 317   
+ 318   
+ 319  # ----------------------------------------------------------------------------------------------------$UNFIX test_gendo;
+ 320  # ----------------------------------------------------------------------------------------------------
+ 329   
+ 330   
+ 331  # ----------------------------------------------------------------------------------------------------
+ 332  #  Define test model
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 333  # ----------------------------------------------------------------------------------------------------
+ 334  Model test /
+ 335  E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in, E_pindex_out, E_quant_o_out, E_quant_no_out
+ 336  /;
+ 337   
+ 338   
+ 339  solve test using CNS;
+ 340  ;
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\CollectAndRun.gmy
+     2       66 GDXIN          1      66  C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gdb0.gdx
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE test Using CNS From line 339
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           7     SINGLE EQUATIONS            9
+BLOCKS OF VARIABLES           7     SINGLE VARIABLES           23
+NON ZERO ELEMENTS            62     NON LINEAR N-Z             53
+DERIVATIVE POOL              20     CONSTANT POOL              16
+CODE LENGTH                 156
+SINGLE =E|X= EQUS             9     SINGLE UNFIXED VARS         9
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+
+
+EXECUTION TIME       =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               08/27/20 15:31:41 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE test Using CNS From line 339
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   test                
+     TYPE    CNS                 
+     SOLVER  CONOPT4             FROM LINE  339
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      16 Solved                   
+
+ RESOURCE USAGE, LIMIT          0.016      1000.000
+ ITERATION COUNT, LIMIT         2    2000000000
+ EVALUATION ERRORS              0             0
+
+CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
+ 
+ 
+    C O N O P T   version 4.15
+    Copyright (C) ARKI Consulting and Development A/S
+                  Bagsvaerdvej 246 A
+                  DK-2880 Bagsvaerd, Denmark
+    Licensed to:  GAMS/CONOPT OEM License
+ 
+ 
+    The user model has 9 constraints and 23 variables
+    with 62 Jacobian elements, 53 of which are nonlinear.
+ 
+    The pre-triangular part of the model has 0 constraints and 14 variables.
+ 
+    Preprocessed model has 9 constraints and 9 variables
+    with 32 Jacobian elements, 25 of which are nonlinear.
+ 
+ ** Feasible solution to a square system.
+ 
+ 
+ CONOPT time Total                            0.003 seconds
+   of which: Function evaluations             0.000 =  0.0%
+             1st Derivative evaluations       0.000 =  0.0%
+ 
+
+
+**** REPORT SUMMARY :        0 INFEASIBLE
+                             0  DEPENDENT
+                             0     ERRORS
+
+
+EXECUTION TIME       =        0.000 SECONDS      2 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              08/27/20 15:31:41 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE test Using CNS From line 339
+
+
+USER: Medium MUD - 10 User License                   G200108/0001CA-WIN
+      DREAM, Danish Rational Economic Agents Model                DC620
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\CollectAndRun.gmy
+Output     C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gjo0.lst

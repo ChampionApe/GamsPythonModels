@@ -14,6 +14,7 @@ class nesting_tree:
 	"""
 	def __init__(self,name="",**kwargs):
 		self.name=name
+		self.version = 'std'
 		self.trees = {}
 
 	def add_tree(self,tree,name="",**kwargs):
@@ -29,20 +30,18 @@ class nesting_tree:
 		else:
 			raise TypeError("'tree' must be either a string (file-path for excel data), a dictionary (w. tree-structure), or a nesting_tree (python class).")
 
-	def run_all(self,Q2Ps=None,**kwargs):
+	def run_all(self,Q2Ps={},**kwargs):
 		"""
 		For all nesting trees in self.trees, retrieve information on inputs, aggregates, outputs, and mappings.
 		"""
-		if Q2Ps is None:
-			Q2Ps = {tree: None for tree in self.trees}
-		[self.trees[tree].run_all(Q2P=Q2Ps[tree],**kwargs) for tree in self.trees];
+		[self.trees[tree].run_all(**kwargs) if tree not in Q2Ps else self.trees[tree].run_all(Q2P=Q2Ps[tree],**kwargs) for tree in self.trees];
 		self.aggregate_sector(**kwargs)
+		self.prune_trees()
 
 	def aggregate_sector(self,**kwargs):
 		"""
 		Aggregate sector from combination of trees.
 		"""
-		# Names:
 		self.setname,self.alias, self.alias2 = list(self.trees.values())[0].setname, list(self.trees.values())[0].alias, list(self.trees.values())[0].alias2
 		self.inp = df('inp',kwargs) # inputs in sector,
 		self.out = df('out',kwargs) # outputs from sector, 
@@ -52,19 +51,26 @@ class nesting_tree:
 		self.map_all = df('map_all',kwargs) # merged mappings from all sectors
 		self.kno_out = df('kno_out',kwargs) # knots in nests of type_io == 'output'.
 		self.kno_inp = df('kno_inp',kwargs) # knots in nests of type_io == 'input'.
+		self.aggregate_sector_sets(**kwargs) # define main sets/subsets of the aggregate sector.
+		self.tree_subsets() # define subsets of the aggregate-sector-sets in each tree
+		self.adjust_trees_from_agg() # adjust some of the sets in individual trees with information from aggregate sector sets.
+		if 'Q2P' in (tree.version for tree in self.trees.values()):
+			self.adjust_for_Q2P(**kwargs)
+
+	def aggregate_sector_sets(self,**kwargs):
 		# Define inputs/outputs from all trees:
 		inputs_all = set.union(*[set(tree.database[tree.inp]) if tree.type_io=='input' else set(tree.database[tree.out]) for tree in self.trees.values()])
 		outputs_all = set.union(*[set(tree.database[tree.inp]) if tree.type_io=='output' else set(tree.database[tree.out]) for tree in self.trees.values()])
 		# Define database, and add inputs,outputs,intermediates,all,final goods, and withoutTax types, all for the aggregate sector:
 		self.database = DataBase.py_db(name=self.name,alias=pd.MultiIndex.from_tuples([(self.setname,self.alias), (self.setname, self.alias2)]))
+		self.database[self.setname] = pd.Index(set.union(*[set(tree.database[tree.setname]) for tree in self.trees.values()]), name=self.setname)
 		self.database[self.inp] = pd.Index(inputs_all-outputs_all, name = self.setname)
 		self.database[self.out] = pd.Index(outputs_all-inputs_all, name = self.setname)
-		self.database[self.int] = pd.Index(outputs_all.intersection(inputs_all), name = self.setname)
-		self.database[self.setname] = pd.Index(inputs_all.union(outputs_all), name = self.setname)
+		self.database[self.int] = pd.Index(set(self.database[self.setname])-set(self.database[self.inp])-set(self.database[self.out]), name = self.setname)
 		self.database[self.fg] = pd.Index(set(self.database[self.inp]).union(set(self.database[self.out])), name = self.setname)
 		self.database[self.wT] = pd.Index(set(self.database[self.inp]).union(set(self.database[self.int])), name = self.setname)
-		# Mapping: 
-		self.database[self.map_all] = pd.MultiIndex.from_tuples(set.union(*[set(tree.database[tree.map]) for tree in self.trees.values()]), names = [self.setname,self.alias])
+		# Mapping:
+		self.database[self.map_all] = pd.MultiIndex.from_tuples(set.union(*[set(tree.database[tree.map_]) for tree in self.trees.values()]), names = [self.setname,self.alias])
 		# Aggregates in output-types, and input-types (if they exists):
 		if 'output' in (tree.type_io for tree in self.trees.values()):
 			self.database[self.kno_out] = pd.Index(set.union(*[set(tree.database[tree.kno]) for tree in self.trees.values() if tree.type_io=='output']), name = self.setname)
@@ -74,24 +80,17 @@ class nesting_tree:
 			self.database[self.kno_inp] = pd.Index(set.union(*[set(tree.database[tree.kno]) for tree in self.trees.values() if tree.type_io=='input']), name = self.setname)
 		else:
 			self.database[self.kno_inp] = pd.Index([], name=self.setname)
+
+	def tree_subsets(self,**kwargs):
 		# Define subsets of the aggregate version in each tree:
 		for tree in self.trees.values():
-			tree.tree_inp = 't_'+self.inp+'_'+tree.name
 			tree.tree_out = 't_'+self.out+'_'+tree.name
-			tree.tree_int = 't_'+self.int+'_'+tree.name
-			tree.tree_fg  = 't_'+self.fg+'_'+tree.name
-			tree.tree_wT  = 't_'+self.wT+'_'+tree.name
 			if tree.type_io=='input':
-				tree.database[tree.tree_inp] = pd.Index(set(tree.database[tree.inp]).intersection(set(self.database[self.inp])), name = tree.setname)
 				tree.database[tree.tree_out] = pd.Index(set(tree.database[tree.out]).intersection(set(self.database[self.out])), name = tree.setname)
-				tree.database[tree.tree_int] = pd.Index(set(tree.database[tree.setname]).intersection(set(self.database[self.int])), name = tree.setname)
 			elif tree.type_io=='output':
-				tree.database[tree.tree_inp] = pd.Index(set(tree.database[tree.out]).intersection(set(self.database[self.inp])), name = tree.setname)
 				tree.database[tree.tree_out] = pd.Index(set(tree.database[tree.inp]).intersection(set(self.database[self.out])), name = tree.setname)
-				tree.database[tree.tree_int] = pd.Index(set(tree.database[tree.setname]).intersection(set(self.database[self.int])), name = tree.setname)
-			tree.database[tree.tree_fg ] = pd.Index(set(tree.database[tree.tree_inp]).union(set(tree.database[tree.tree_out])), name = tree.setname)
-			tree.database[tree.tree_wT ] = pd.Index(set(tree.database[tree.tree_inp]).union(set(tree.database[tree.tree_int])), name = tree.setname)		
-		# Define 'i_tree_' subsets: These are elements from the original tree (map,kno,bra,inp,out) that are corrected for using aggregate tree information:
+
+	def adjust_trees_from_agg(self):
 		for tree in self.trees.values():
 			tree.i_tree_kno = 'i_kno_'+tree.name # knots in tree
 			tree.i_tree_kno_no = 'i_kno_no_'+tree.name # not output version
@@ -100,8 +99,18 @@ class nesting_tree:
 			tree.database[tree.i_tree_kno] = tree.database[tree.kno]
 			if tree.type_io=='input':
 				tree.database[tree.i_tree_kno_no] = pd.Index(set(tree.database[tree.kno])-set(self.database[self.out]),name=tree.setname)
-				tree.database[tree.i_tree_bra_o] = pd.Index(tree.database[tree.map].get_level_values(0)[tree.database[tree.map].get_level_values(1).isin(self.database[self.out])].unique(), name=tree.setname)
+				tree.database[tree.i_tree_bra_o] = pd.Index(tree.database[tree.map_].get_level_values(0)[tree.database[tree.map_].get_level_values(1).isin(self.database[self.out])].unique(), name=tree.setname)
 			elif tree.type_io=='output':
 				tree.database[tree.i_tree_bra_o] = pd.Index(set(tree.database[tree.bra]).intersection(set(self.database[self.out])), name=tree.setname)
 			tree.database[tree.i_tree_bra_no] = pd.Index(set(tree.database[tree.bra])-set(tree.database[tree.i_tree_bra_o]), name=tree.setname)
-		# Finally, create empty sets in case the trees does not include any input or output-type trees:
+
+	def adjust_for_Q2P(self,**kwargs):
+		self.version = 'Q2P'
+		self.PwT_dom = df('PwT_dom',kwargs)
+		self.database[self.PwT_dom] = pd.Index(set(self.database[self.wT])-set.union(*[set(tree.database[tree.OnlyQ]) for tree in self.trees.values() if tree.version=='Q2P']), name = self.setname)
+
+	def prune_trees(self):
+		"""
+		Create set of sets/attributes from nesting trees that are not needed once the information has been applied in model.
+		"""
+		self.prune_trees = set(['kno','bra','inp','out','OnlyQ'])

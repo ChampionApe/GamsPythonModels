@@ -430,7 +430,7 @@ class py_db:
 		py_db.merge_dbs(self.db_other,self,priority)
 
 	@staticmethod
-	def merge_dbs(db1,db2,priority='first'):
+	def merge_dbs(db1,db2,priority='first',exceptions=[]):
 		"""
 		Merge db2 into db1, with the priority 'first','second' or 'replace'. 
 			- 	'first' implies that combining symbols in db1 and db2,
@@ -439,12 +439,12 @@ class py_db:
 			-	'replace' implies that symbols in db1 are replaced w. db2 when the names overlap. 
 		"""
 		if isinstance(db1,GamsPandasDatabase):
-			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2.sets['sets']]; # Fundamental sets
+			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2.sets['sets'] if name not in exceptions]; # Fundamental sets
 			if 'alias_' in db2:
 				[py_db.add_or_merge(db1,py_db.create_alias(db2,name,alias),alias,priority) for name in db2.alias_all for alias in db2.alias_all[name]]; # alias'
-			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2 if name not in db2.sets['sets']]; # other symbols
+			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2 if name not in db2.sets['sets'] and name not in exceptions]; # other symbols
 		else:
-			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2];
+			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2 if name not in exceptions];
 			if 'alias_' in db2:
 				[py_db.add_or_merge(db1,py_db.create_alias(db2,name,alias),alias,priority) for name in db2.alias_all for alias in db2.alias_all[name]];
 
