@@ -126,3 +126,113 @@ class norm_CES:
 					'sigma': afl({'a': ['a_aa']}),
 					'map_': afl({'a': [None,['a_aa','aa_a'],'a_aaa']}),
 					'n'  : afl({'a': ['a_aa','a_aaa']})}
+
+class norm_CET:
+	"""
+	Similar to CES class (noramlized such that sum of outputs = input).
+	"""
+	def __init__(self,version='std',**kwargs):
+		self.version=version
+		if version is 'Q2P':
+			raise TypeError('Q2P version can only be applied on input-type nesting trees.')
+
+	@property 
+	def doms(self):
+		return CET().doms
+
+	@property 
+	def conds(self):
+		return CET().conds
+
+	@property
+	def vartext(self):
+		return {'PbT': afl({'a': [None, 'a_aa', 'a_aaa']}),
+				'PwT': afl({'a': [None, 'a_aa', 'a_aaa']}),
+				'qS' : afl({'a': [None, 'a_aa']}),
+				'qD' : afl({'a': [None, 'a_aa']}),
+				'mu' : afl({'a': [None, ['a_aa','aa_a'],'a_aaa']}),
+				'eta': afl({'a': ['a_aa']}),
+				'map_': afl({'a':[None, ['a_aa','aa_a'],'a_aaa']}),
+				'n'  : afl({'a': ['a_aa', 'a_aaa']}),
+				'out': afl({'a': ['a_aa','a_aaa']})
+				}
+
+class MNL:
+	"""
+	Multinomial-logit-like model. Can be used for output/input types.
+	"""
+	def __init__(self,version='std',**kwargs):
+		"""
+		If version is 'std', MNL is formed without mu-parameters. If version is 'MNL_w_mu' mu-parameters are used.
+		"""
+		self.version = version
+
+	@property
+	def doms(self):
+		return norm_CES().doms
+
+	@property
+	def conds(self):
+		return norm_CES().conds
+
+	@property
+	def vartext(self):
+		if self.version is 'std':
+			return {'PbT': afl({'a': [None, 'a_aa']}),
+					'PwT': afl({'a': [None, 'a_aa','a_aaa']}),
+					'qS' : afl({'a': ['a_aa']}),
+					'qD' : afl({'a': [None, 'a_aa']}),
+					'sigma': afl({'a': ['a_aa']}),
+					'map_': afl({'a': [None,['a_aa','aa_a'],'a_aaa']}),
+					'n'  : afl({'a': ['a_aa','a_aaa']})}
+		elif self.version is 'MNL_w_mu':
+			return {'PbT': afl({'a': [None, 'a_aa']}),
+					'PwT': afl({'a': [None, 'a_aa','a_aaa']}),
+					'qS' : afl({'a': ['a_aa']}),
+					'qD' : afl({'a': [None, 'a_aa']}),
+					'mu' : afl({'a': [None, 'a_aaa']}),
+					'sigma': afl({'a': ['a_aa']}),
+					'map_': afl({'a': [None,['a_aa','aa_a'],'a_aaa']}),
+					'n'  : afl({'a': ['a_aa','a_aaa']})}
+
+class MNL_out:
+	"""
+	Multinomial-logit-like model. Can be used for output/input types.
+	"""
+	def __init__(self,version='std',**kwargs):
+		"""
+		If version is 'std', MNL is formed without mu-parameters. If version is 'MNL_w_mu' mu-parameters are used.
+		"""
+		self.version = version
+
+	@property
+	def doms(self):
+		return norm_CET().doms
+
+	@property
+	def conds(self):
+		return norm_CET().conds
+
+	@property
+	def vartext(self):
+		if self.version is 'std':
+			return {'PbT': afl({'a': [None, 'a_aa', 'a_aaa']}),
+					'PwT': afl({'a': [None, 'a_aa', 'a_aaa']}),
+					'qS' : afl({'a': [None, 'a_aa']}),
+					'qD' : afl({'a': [None, 'a_aa']}),
+					'eta': afl({'a': ['a_aa']}),
+					'map_': afl({'a':[None, ['a_aa','aa_a'],'a_aaa']}),
+					'n'  : afl({'a': ['a_aa', 'a_aaa']}),
+					'out': afl({'a': ['a_aa','a_aaa']})
+					}
+		elif self.version is 'MNL_w_mu':
+			return {'PbT': afl({'a': [None, 'a_aa', 'a_aaa']}),
+					'PwT': afl({'a': [None, 'a_aa', 'a_aaa']}),
+					'qS' : afl({'a': [None, 'a_aa']}),
+					'qD' : afl({'a': [None, 'a_aa']}),
+					'mu' : afl({'a': [None, ['a_aa','aa_a'],'a_aaa']}),
+					'eta': afl({'a': ['a_aa']}),
+					'map_': afl({'a':[None, ['a_aa','aa_a'],'a_aaa']}),
+					'n'  : afl({'a': ['a_aa', 'a_aaa']}),
+					'out': afl({'a': ['a_aa','a_aaa']})
+					}

@@ -1,47 +1,53 @@
 def equation(name,domains,conditions,LHS,RHS):
 	return f"""{name}{domains}{'$('+conditions+')' if conditions != '' else conditions}..	{LHS} =E= {RHS};"""
 
+def ign_KeyError(dict_,key):
+	try:
+		return dict_[key]
+	except KeyError:
+		return None
+
 class CES:
 	"""
 	The class includes various ways of writing price-indices and demand functions for nested CES.
 	"""
+	def __init__(self,version='std',**kwargs):
+		self.version = version
+
 	def run(self,vartext,domains,conditions,name):
 		"""
 		Map dictionaries with variables to equations and collect in one string.
 		"""
-		out  = self.p_index(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
-		out += self.p_index(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)+'\n\t'
-		out += self.p_index_CD(f"E_pindex_CD_o_{name}", domains['p_index_CD_o'], conditions['p_index_CD_o'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
-		out += self.p_index_CD(f"E_pindex_CD_no_{name}", domains['p_index_CD_no'], conditions['p_index_CD_o'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)+'\n\t'
-		out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
-			vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
-		out += self.demand(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
-			vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)
-		return out
-
-	def run_Q2P(self,vartext,domains,conditions,name):
-		"""
-		Map dictionaries with variables to equations and collect in one string. Version of .run with quantities and prices defined over different, but overlapping sets.
-		"""
-		out  = self.p_index_Q2P(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=True)+'\n\t'
-		out += self.p_index_Q2P(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=False)+'\n\t'
-		out += self.p_index_Q2P_CD(f"E_pindex_CD_o_{name}", domains['p_index_CD_o'], conditions['p_index_CD_o'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=True)+'\n\t'
-		out += self.p_index_Q2P_CD(f"E_pindex_CD_no_{name}", domains['p_index_CD_no'], conditions['p_index_CD_no'],
-			vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=False)+'\n\t'
-		out += self.demand_Q2P(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
-			vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=True)+'\n\t'
-		out += self.demand_Q2P(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
-			vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=False)+'\n\t'
-		out += self.Q2P_agg(f"E_qagg_{name}",domains['qagg'],conditions['qagg'],
-			vartext['qD'],vartext['n'],vartext['q2p'])
-		return out
+		if self.version is 'std':
+			out  = self.p_index(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
+			out += self.p_index(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)+'\n\t'
+			out += self.p_index_CD(f"E_pindex_CD_o_{name}", domains['p_index_CD_o'], conditions['p_index_CD_o'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
+			out += self.p_index_CD(f"E_pindex_CD_no_{name}", domains['p_index_CD_no'], conditions['p_index_CD_o'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)+'\n\t'
+			out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
+				vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
+			out += self.demand(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
+				vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)
+			return out
+		elif self.version is 'Q2P':
+			out  = self.p_index_Q2P(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=True)+'\n\t'
+			out += self.p_index_Q2P(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=False)+'\n\t'
+			out += self.p_index_Q2P_CD(f"E_pindex_CD_o_{name}", domains['p_index_CD_o'], conditions['p_index_CD_o'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=True)+'\n\t'
+			out += self.p_index_Q2P_CD(f"E_pindex_CD_no_{name}", domains['p_index_CD_no'], conditions['p_index_CD_no'],
+				vartext['PbT'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=False)+'\n\t'
+			out += self.demand_Q2P(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
+				vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=True)+'\n\t'
+			out += self.demand_Q2P(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
+				vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],vartext['q2p'],output=False)+'\n\t'
+			out += self.Q2P_agg(f"E_qagg_{name}",domains['qagg'],conditions['qagg'],
+				vartext['qD'],vartext['n'],vartext['q2p'])
+			return out
 
 	def p_index(self,e_name,domains,conditions,PbT,PwT,mu,sigma,n,map_,output=False):
 		"""
@@ -124,6 +130,8 @@ class norm_CES:
 	"""
 	Normalized version of CES class. NB: Q2P version is not implemented.
 	"""
+	def __init__(self,version='std',**kwargs):
+		self.version = version
 
 	def run(self,vartext,domains,conditions,name):
 		"""
@@ -141,7 +149,7 @@ class norm_CES:
 
 	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,n,map_,output=False):
 		"""
-		Weighted average price index
+		Weighted average price index.
 		"""
 		RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qD['b']}"""
 		if output is True:
@@ -159,7 +167,6 @@ class norm_CES:
 			RHS = f"""sum({n['a_aa']}$({map_['b']}), ({mu['b']} * ({PbT['a_aa']}/{PwT['b']})**({sigma['a_aa']}) * {qS['a_aa']})/sum({n['a_aaa']}$({map_['a_aaa']}), {mu['a_aaa']} *({PbT['a_aa']}/{PwT['a_aaa']})**({sigma['a_aa']})))"""
 		return equation(e_name,domains,conditions,qD['b'],RHS)
 
-
 class CET:
 	"""
 	Similar class as CES functions, however, for output-splits.
@@ -168,6 +175,9 @@ class CET:
 		(1) The elasticites are generally negative instead of positive, 
 		(2) Sums has to be over both final outputs and others. 
 	"""
+	def __init__(self,version='std',**kwargs):
+		self.version = version
+
 	def run(self,vartext,domains,conditions,name):
 		"""
 		Map dictionaries with variables to equations and collect in one string.
@@ -190,6 +200,123 @@ class CET:
 			return equation(e_name,domains,conditions,qD['b'],RHS)
 		else:
 			RHS = f"""sum({n['a_aa']}$({map_['b']}), {mu['b']} * ({PbT['b']}/{PwT['a_aa']})**(-{eta['a_aa']}) * {qD['a_aa']})"""
+			return equation(e_name,domains,conditions,qS['b'],RHS)
+
+class norm_CET:
+	"""
+	Normalized version of CET class. NB: Q2P version is not implemented.
+	"""
+	def __init__(self,version='std',**kwargs):
+		self.version = version
+
+	def run(self,vartext,domains,conditions,name):
+		"""
+		Map dictionaries with variables to equations and collect in one string.
+		"""
+		out = self.p_index(f"E_pindex_{name}", domains['p_index'], conditions['p_index'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['n'],vartext['map_'],vartext['out'])+'\n\t'
+		out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['mu'],vartext['eta'],vartext['n'],vartext['map_'],vartext['out'],output=True)+'\n\t'
+		out += self.demand(f"E_quant_no_{name}", domains['quant_no'], conditions['quant_no'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['mu'],vartext['eta'],vartext['n'],vartext['map_'],vartext['out'],output=False)
+		return out
+
+	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,qS,n,map_,out,output=False):
+		"""
+		Weighted average price index.
+		"""
+		RHS = f"""(sum({n['a_aa']}$({map_['a_aa.aa_a']} and {out['a_aa']}), {qS['a_aa']}*{PbT['a_aa']})+sum({n['a_aa']}$({map_['a_aa.aa_a']} and not {out['a_aa']}), {qD['a_aa']}*{PwT['a_aa']}))/{qD['b']}"""
+		return equation(e_name,domains,conditions,PwT['b'],RHS)
+
+	def demand(self,e_name,domains,conditions,PbT,PwT,qD,qS,mu,eta,n,map_,out,output=False):
+		if output is False:
+			RHS = f"""sum({n['a_aa']}$({map_['b']}), ({mu['b']} * ({PwT['b']}/{PwT['a_aa']})**(-{eta['a_aa']}) * {qD['a_aa']})/(sum({n['a_aaa']}$({map_['a_aaa']} and {out['a_aaa']}), {mu['a_aaa']} * ({PbT['a_aaa']}/{PwT['a_aa']})**(-{eta['a_aa']}))+sum({n['a_aaa']}$({map_['a_aaa']} and not {out['a_aaa']}), {mu['a_aaa']} * ({PwT['a_aaa']}/{PwT['a_aa']})**(-{eta['a_aa']}))))"""
+			return equation(e_name,domains,conditions,qD['b'],RHS)
+		else:
+			RHS = f"""sum({n['a_aa']}$({map_['b']}), ({mu['b']} * ({PbT['b']}/{PwT['a_aa']})**(-{eta['a_aa']}) * {qD['a_aa']})/(sum({n['a_aaa']}$({map_['a_aaa']} and {out['a_aaa']}), {mu['a_aaa']} * ({PbT['a_aaa']}/{PwT['a_aa']})**(-{eta['a_aa']}))+sum({n['a_aaa']}$({map_['a_aaa']} and not {out['a_aaa']}), {mu['a_aaa']} * ({PwT['a_aaa']}/{PwT['a_aa']})**(-{eta['a_aa']}))))"""
+			return equation(e_name,domains,conditions,qS['b'],RHS)
+
+class MNL:
+	"""
+	Multinomial-logit-like model, input-type.
+	"""
+	def __init__(self,version='std',**kwargs):
+		self.version = version
+
+	def run(self,vartext,domains,conditions,name):
+		"""
+		Map dictionaries with variables to equations and collect in one string.
+		"""
+		if self.version is 'std':
+			vartext['mu'] = False
+		out  = self.p_index(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['n'],vartext['map_'],output=True)+'\n\t'
+		out += self.p_index(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['n'],vartext['map_'],output=False)+'\n\t'
+		out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['sigma'],vartext['n'],vartext['map_'],mu=vartext['mu'],output=True)+'\n\t'
+		out += self.demand(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['sigma'],vartext['n'],vartext['map_'],mu=vartext['mu'],output=False)
+		return out
+
+	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,n,map_,output=False):
+		"""
+		Weighted average price index.
+		"""
+		RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qD['b']}"""
+		if output is True:
+			return equation(e_name,domains,conditions,PbT['b'],RHS)
+		else:
+			return equation(e_name,domains,conditions,PwT['b'],RHS)
+
+	def demand(self,e_name,domains,conditions,PbT,PwT,qD,qS,sigma,n,map_,mu=False,output=False):
+		"""
+		If mu is false, the class only uses eta as a parameter. If mu is not false, it is premultiplied on each component.
+		"""
+		if output is False:
+			RHS = f"""sum({n['a_aa']}$({map_['b']}), {'' if mu is False else mu['b']+'*'} exp(({PwT['a_aa']}-{PwT['b']})/{sigma['a_aa']})*{qD['a_aa']} / sum({n['a_aaa']}$({map_['a_aaa']}), {'' if mu is False else mu['a_aaa']+'*'} exp(({PwT['a_aa']}-{PwT['a_aaa']})/{sigma['a_aa']})))"""
+		else:
+			RHS = f"""sum({n['a_aa']}$({map_['b']}), {'' if mu is False else mu['b']+'*'} exp(({PbT['a_aa']}-{PwT['b']})/{sigma['a_aa']})*{qS['a_aa']} / sum({n['a_aaa']}$({map_['a_aaa']}), {'' if mu is False else mu['a_aaa']+'*'} exp(({PbT['a_aa']}-{PwT['a_aaa']})/{sigma['a_aa']})))"""
+		return equation(e_name,domains,conditions,qD['b'],RHS)
+
+class MNL_out:
+	"""
+	Multinomial-logit-like model, output-type.
+	"""
+	def __init__(self,version='std',**kwargs):
+		self.version = version
+
+	def run(self,vartext,domains,conditions,name):
+		"""
+		Map dictionaries with variables to equations and collect in one string.
+		"""
+		if self.version is 'std':
+			vartext['mu'] = False
+		out = self.p_index(f"E_pindex_{name}", domains['p_index'], conditions['p_index'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['n'],vartext['map_'],vartext['out'])+'\n\t'
+		out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['eta'],vartext['n'],vartext['map_'],vartext['out'],mu=vartext['mu'],output=True)+'\n\t'
+		out += self.demand(f"E_quant_no_{name}", domains['quant_no'], conditions['quant_no'],
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['eta'],vartext['n'],vartext['map_'],vartext['out'],mu=vartext['mu'],output=False)
+		return out
+
+
+	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,qS,n,map_,out,output=False):
+		"""
+		Weighted average price index.
+		"""
+		RHS = f"""(sum({n['a_aa']}$({map_['a_aa.aa_a']} and {out['a_aa']}), {qS['a_aa']}*{PbT['a_aa']})+sum({n['a_aa']}$({map_['a_aa.aa_a']} and not {out['a_aa']}), {qD['a_aa']}*{PwT['a_aa']}))/{qD['b']}"""
+		return equation(e_name,domains,conditions,PwT['b'],RHS)
+
+	def demand(self,e_name,domains,conditions,PbT,PwT,qD,qS,eta,n,map_,out,mu=False,output=False):
+		"""
+		If mu is false, the class only uses eta as a parameter. If mu is not false, it is premultiplied on each component.
+		"""
+		if output is False:
+			RHS = f"""sum({n['a_aa']}$({map_['b']}), {'' if mu is False else mu['b']+'*'} exp(({PwT['a_aa']}-{PwT['b']})/{eta['a_aa']})*{qD['a_aa']} / (sum({n['a_aaa']}$({map_['a_aaa']} and {out['a_aaa']}), {'' if mu is False else mu['a_aaa']+'*'} exp(({PwT['a_aa']}-{PbT['a_aaa']})/{eta['a_aa']}))+sum({n['a_aaa']}$({map_['a_aaa']} and not {out['a_aaa']}), {'' if mu is False else mu['a_aaa']+'*'} exp(({PwT['a_aa']}-{PwT['a_aaa']})/{eta['a_aa']}))))"""
+			return equation(e_name,domains,conditions,qD['b'],RHS)
+		else:
+			RHS = f"""sum({n['a_aa']}$({map_['b']}), {'' if mu is False else mu['b']+'*'} exp(({PwT['a_aa']}-{PbT['b']})/{eta['a_aa']})*{qD['a_aa']} / (sum({n['a_aaa']}$({map_['a_aaa']} and {out['a_aaa']}), {'' if mu is False else mu['a_aaa']+'*'} exp(({PwT['a_aa']}-{PbT['a_aaa']})/{eta['a_aa']}))+sum({n['a_aaa']}$({map_['a_aaa']} and not {out['a_aaa']}), {'' if mu is False else mu['a_aaa']+'*'} exp(({PwT['a_aa']}-{PwT['a_aaa']})/{eta['a_aa']}))))"""
 			return equation(e_name,domains,conditions,qS['b'],RHS)
 
 class sums:

@@ -8,8 +8,8 @@ import regex_gms
 import nesting_tree
 import DB2Gams
 
-def apply_type(type_):
-	return eval(f"COE.{type_}()")
+def apply_type(type_,version):
+	return eval(f"COE.{type_}")(version=version)
 
 def apply_type_settings(type_,version):
 	return eval(f"COE_settings.{type_}")(version=version)
@@ -145,69 +145,10 @@ class GPM_STA_PE:
 				self.model.blocks += f"$BLOCK M_{local} \n\t{self.eqtext(local)}\n$ENDBLOCK\n"
 
 		def eqtext(self,local):
-			fcoe, name = apply_type(self.locals[local]['type_f']), self.locals[local]['name']
+			fcoe, name = apply_type(self.locals[local]['type_f'],self.locals[local]['version']), self.locals[local]['name']
 			ftype_settings = self.ftype_settings(local)
-			if self.locals[local]['version'] is 'std':
-				return fcoe.run(ftype_settings['vartext'], ftype_settings['domains'],ftype_settings['conditions'], name)
-			elif self.locals[local]['version'] is 'Q2P':
-				return fcoe.run_Q2P(ftype_settings['vartext'], ftype_settings['domains'],ftype_settings['conditions'],name)
-
-		# def eqtext(self,local):
-		# 	"""
-		# 	Write equations: Price indices and demand functions. It takes a dictionary of variables, domains, conditionals and a sub-module name.
-		# 	"""
-		# 	fcoe, name = apply_type(self.locals[local]['type_f']), self.locals[local]['name']
-		# 	if self.locals[local]['version'] is 'std':
-		# 		return fcoe.run(self.vartext(local), self.eq_domains(local), self.eq_conditions(local), name)
-		# 	elif self.locals[local]['version'] is 'Q2P':
-		# 		return fcoe.run_Q2P(self.vartext(local), self.eq_domains(local), self.eq_conditions(local), name)
-
-		# def eq_domains(self,local):
-		# 	"""
-		# 	Return a dictionary with domains on the respective equations. 
-		# 	The type of equations depend on the type of function applied in the specific tree.
-		# 	"""
-		# 	if self.locals[local]['type_f']=='CES':
-		# 		doms = {'p_index_o': self.aux_write_d('PbT'), 'p_index_no': self.aux_write_d('PwT'), 'p_index_CD_o': self.aux_write_d('PbT'), 'p_index_CD_no': self.aux_write_d('PwT'),
-		# 					'quant_o': self.aux_write_d('qD'), 'quant_no': self.aux_write_d('qD')}
-		# 		if self.locals[local]['version'] is 'Q2P':
-		# 			doms['qagg'] = self.aux_write_d('qD')
-		# 		return doms
-		# 	elif self.locals[local]['type_f']=='CET':
-		# 		return {'p_index': self.aux_write_d('PwT'), 'quant_o': self.aux_write_d('qD'), 'quant_no': self.aux_write_d('qD')}
-
-		# def eq_conditions(self,local):
-		# 	"""
-		# 	Return a dictionary with conditionals on the respective equations. 
-		# 	"""
-		# 	if self.locals[local]['type_f']=='CES':
-		# 		conds = {'p_index_o': self.aux_write_s('tree_out',local), 'p_index_no': self.aux_write_s('i_tree_kno_no',local), 'p_index_CD_o': self.aux_write_s('tree_out',local), 'p_index_CD_no': self.aux_write_s('i_tree_kno_no',local),
-		# 				 'quant_o': self.aux_write_s('i_tree_bra_o',local), 'quant_no': self.aux_write_s('i_tree_bra_no',local)}
-		# 		if self.locals[local]['version'] is 'Q2P':
-		# 			conds['qagg'] = self.aux_write_s('q2p_agg',local)
-		# 		return conds
-		# 	elif self.locals[local]['type_f']=='CET':
-		# 		return {'p_index': self.aux_write_s('i_tree_kno',local), 'quant_o': self.aux_write_s('i_tree_bra_o',local), 'quant_no': self.aux_write_s('i_tree_bra_no',local)}
-
-		# def vartext(self,local):
-		# 	"""
-		# 	Return dictionary with variable names as keys, and gams-strings in values. 'b' returns with domains as 'baseline', 
-		# 	'a' returns aliased domains, and 'aa' returns another type of aliased domains etc. 'l' adds '.l' to the variable.
-		# 	local is used to identify which of the nesting trees' maps are used to condition on.
-		# 	"""
-		# 	return {'PbT': {'b'	: self.aux_write('PbT'), 'a': self.aux_write('PbT', a=self.n2nn), 'aa': self.aux_write('PbT',a=self.n2nnn)},
-		# 			'PwT': {'b'	: self.aux_write('PwT'), 'a' : self.aux_write('PwT',a=self.n2nn), 'aa': self.aux_write('PwT',a=self.n2nnn)},
-		# 			'qS' : {'b' : self.aux_write('qS'),  'a' : self.aux_write('qS', a=self.n2nn)},
-		# 			'qD' : {'b' : self.aux_write('qD'),  'a' : self.aux_write('qD', a=self.n2nn), 'aa': self.aux_write('qD' ,a=self.n2nnn)},
-		# 			'mu' : {'b' : self.aux_write('mu'),  'a' : self.aux_write('mu', a={**self.n2nn, **self.nn2n}), 'aa': self.aux_write('mu',a=self.n2nnn)},
-		# 			'sigma': {'b': self.aux_write('sigma'), 'a': self.aux_write('sigma',a=self.n2nn), 'l': self.aux_write('sigma',l='.l')},
-		# 			'eta': {'b': self.aux_write('eta'),  'a' : self.aux_write('eta',a=self.n2nn)},
-		# 			'maps': {'b': self.aux_write_s('map',local), 'a': self.aux_write_s('map',local,a={**self.n2nn,**self.nn2n}), 'aa': self.aux_write_s('map',local,a=self.n2nnn)},
-		# 			'sets': {'a': self.aux_write_glb('nn'), 'aa': self.aux_write_glb('nnn')},
-		# 			'out' : {'a': self.aux_write_s('tree_out',local,a=self.n2nn)},
-		# 			'q2p' : {'a': self.aux_write_s('q2p',local, a={**self.n2nn, **self.nn2nnn}), 'aa': self.aux_write_s('q2p',local,a=self.nn2nnn)} if self.locals[local]['version'] is 'Q2P' else None
-		# 			}
-
+			return fcoe.run(ftype_settings['vartext'], ftype_settings['domains'],ftype_settings['conditions'], name)
+			
 		def ftype_settings(self,local):
 			"""
 			To write a gams class, three dicts of information is needed: (1) domains of equations, (2) conditions on equations, (3) symbols needed.

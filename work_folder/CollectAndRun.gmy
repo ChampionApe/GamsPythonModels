@@ -34,60 +34,60 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 # ----------------------------------------------------------------------------------------------------
 
 sets
-	n
-	alias_set
 	alias_map2
+	alias_set
+	n
 ;
 
-alias(n,nnn,nn);
+alias(n,nn,nnn);
 
 sets
-	out[n]
-	kno_inp[n]
-	i_kno_in[n]
-	inp[n]
-	i_bra_no_out[n]
 	wT[n]
-	i_kno_no_in[n]
-	i_kno_out[n]
-	map_test_in[n,nn]
-	i_bra_o_out[n]
-	map_all[n,nn]
-	t_out_in[n]
-	int[n]
-	alias_[alias_set,alias_map2]
-	i_bra_o_in[n]
-	map_test_out[n,nn]
-	i_bra_no_in[n]
 	kno_out[n]
-	fg[n]
 	t_out_out[n]
+	i_kno_no_in[n]
+	i_bra_no_out[n]
+	fg[n]
+	i_bra_o_out[n]
+	i_kno_out[n]
+	i_kno_in[n]
+	map_all[n,nn]
+	i_bra_no_in[n]
+	map_test_out[n,nn]
+	kno_inp[n]
+	i_bra_o_in[n]
+	t_out_in[n]
+	map_test_in[n,nn]
+	inp[n]
+	int[n]
+	out[n]
+	alias_[alias_set,alias_map2]
 ;
 $GDXIN %test%
 $onMulti
-$load n
-$load alias_set
 $load alias_map2
-$load out
-$load kno_inp
-$load i_kno_in
-$load inp
-$load i_bra_no_out
+$load alias_set
+$load n
 $load wT
-$load i_kno_no_in
-$load i_kno_out
-$load t_out_in
-$load i_bra_o_out
-$load int
-$load i_bra_o_in
-$load i_bra_no_in
-$load t_out_out
-$load fg
 $load kno_out
-$load alias_
+$load t_out_out
+$load i_kno_no_in
+$load i_bra_no_out
+$load fg
+$load i_bra_o_out
+$load i_kno_out
+$load i_kno_in
+$load i_bra_no_in
+$load kno_inp
+$load i_bra_o_in
+$load t_out_in
+$load inp
+$load int
+$load out
 $load map_all
 $load map_test_in
 $load map_test_out
+$load alias_
 $GDXIN
 $offMulti
 ;
@@ -107,14 +107,14 @@ $offMulti
 #  Initialize test_gtech group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
-VARIABLE sigma[n] "";
-sigma.L[n]$((kno_inp[n])) = 0;
-VARIABLE eta[n] "";
-eta.L[n]$((kno_out[n])) = 0;
 VARIABLE mark_up[n] "";
 mark_up.L[n]$((out[n])) = 0;
+VARIABLE eta[n] "";
+eta.L[n]$((kno_out[n])) = 0;
 VARIABLE mu[n,nn] "";
 mu.L[n,nn]$((map_all[n,nn])) = 0;
+VARIABLE sigma[n] "";
+sigma.L[n]$((kno_inp[n])) = 0;
 $onlisting
 
 
@@ -188,35 +188,35 @@ $onlisting
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    parameter load_sigma[n] "";
-    load_sigma[n]$(((kno_inp[n]))) = 0;
+    parameter load_mark_up[n] "";
+    load_mark_up[n]$(((out[n]))) = 0;
   
     parameter load_eta[n] "";
     load_eta[n]$(((kno_out[n]))) = 0;
   
-    parameter load_mark_up[n] "";
-    load_mark_up[n]$(((out[n]))) = 0;
-  
     parameter load_mu[n,nn] "";
     load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+  
+    parameter load_sigma[n] "";
+    load_sigma[n]$(((kno_inp[n]))) = 0;
   
   execute_load "%test%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
- load_sigma=sigma.l  load_eta=eta.l  load_mark_up=mark_up.l  load_mu=mu.l ;
+ load_mark_up=mark_up.l  load_eta=eta.l  load_mu=mu.l  load_sigma=sigma.l ;
   
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
   
     eta.fx[n]$(((kno_out[n]))) = load_eta[n];
   
-    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
-  
     mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+  
+    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
 $onlisting
 ;
 $offlisting
@@ -267,9 +267,9 @@ E_pindex_o_in[n]$(t_out_in[n]).. 	PbT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn
 EQUATION E_pindex_no_in[n];
 E_pindex_no_in[n]$(i_kno_no_in[n]).. 	PwT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
 EQUATION E_quant_o_in[n];
-E_quant_o_in[n]$(i_bra_o_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), (mu[n,nn] * (PbT[nn]/PwT[n])**(sigma[nn]) * qS[nn])/sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn] *(PbT[nn]/PwT[nnn])**(sigma[nn])));
+E_quant_o_in[n]$(i_bra_o_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), mu[n,nn]* exp((PbT[nn]-PwT[n])/sigma[nn])*qS[nn] / sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn]* exp((PbT[nn]-PwT[nnn])/sigma[nn])));
 EQUATION E_quant_no_in[n];
-E_quant_no_in[n]$(i_bra_no_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), (mu[n,nn] * (PwT[nn]/PwT[n])**(sigma[nn]) * qD[nn])/sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn] *(PwT[nn]/PwT[nnn])**(sigma[nn])));
+E_quant_no_in[n]$(i_bra_no_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), mu[n,nn]* exp((PwT[nn]-PwT[n])/sigma[nn])*qD[nn] / sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn]* exp((PwT[nn]-PwT[nnn])/sigma[nn])));
 
 # ----------------------------------------------------------------------------------------------------
 #  Define M_in model
@@ -283,11 +283,11 @@ E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in
 #  Initialize M_out equation block
 # ----------------------------------------------------------------------------------------------------
 EQUATION E_pindex_out[n];
-E_pindex_out[n]$(i_kno_out[n]).. 	PwT[n]  =E=  (sum(nn$(map_test_out[nn,n] and out[nn]), mu[nn,n] * PbT[nn]**(1-eta[n]))+sum(nn$(map_test_out[nn,n] and not out[nn]), mu[nn,n] * PwT[nn]**(1-eta[n])))**(1/(1-eta[n]));
+E_pindex_out[n]$(i_kno_out[n]).. 	PwT[n]  =E=  (sum(nn$(map_test_out[nn,n] and out[nn]), qS[nn]*PbT[nn])+sum(nn$(map_test_out[nn,n] and not out[nn]), qD[nn]*PwT[nn]))/qD[n];
 EQUATION E_quant_o_out[n];
-E_quant_o_out[n]$(i_bra_o_out[n]).. 	qS[n]  =E=  sum(nn$(map_test_out[n,nn]), mu[n,nn] * (PbT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+E_quant_o_out[n]$(i_bra_o_out[n]).. 	qS[n]  =E=  sum(nn$(map_test_out[n,nn]),  exp((PwT[nn]-PbT[n])/eta[nn])*qD[nn] / (sum(nnn$(map_test_out[nnn,nn] and out[nnn]),  exp((PwT[nn]-PbT[nnn])/eta[nn]))+sum(nnn$(map_test_out[nnn,nn] and not out[nnn]),  exp((PwT[nn]-PwT[nnn])/eta[nn]))));
 EQUATION E_quant_no_out[n];
-E_quant_no_out[n]$(i_bra_no_out[n]).. 	qD[n]  =E=  sum(nn$(map_test_out[n,nn]), mu[n,nn] * (PwT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+E_quant_no_out[n]$(i_bra_no_out[n]).. 	qD[n]  =E=  sum(nn$(map_test_out[n,nn]),  exp((PwT[nn]-PwT[n])/eta[nn])*qD[nn] / (sum(nnn$(map_test_out[nnn,nn] and out[nnn]),  exp((PwT[nn]-PbT[nnn])/eta[nn]))+sum(nnn$(map_test_out[nnn,nn] and not out[nnn]),  exp((PwT[nn]-PwT[nnn])/eta[nn]))));
 
 # ----------------------------------------------------------------------------------------------------
 #  Define M_out model
@@ -307,10 +307,10 @@ E_pindex_out, E_quant_o_out, E_quant_no_out
 # ----------------------------------------------------------------------------------------------------$FIX test_gtech, test_gexo;
 # ----------------------------------------------------------------------------------------------------
 $offlisting
-sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
-eta.FX[n]$((kno_out[n])) = eta.L[n];
 mark_up.FX[n]$((out[n])) = mark_up.L[n];
+eta.FX[n]$((kno_out[n])) = eta.L[n];
 mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
+sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
 PwT.FX[n]$((inp[n])) = PwT.L[n];
 qS.FX[n]$((out[n])) = qS.L[n];
 $onlisting
