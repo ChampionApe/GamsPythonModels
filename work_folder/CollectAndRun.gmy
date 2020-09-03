@@ -7,12 +7,12 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_CollectFile.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\abate_CollectFile.gms
 # ----------------------------------------------------------------------------------------------------
 
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_functions.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\abate_functions.gms
 # ----------------------------------------------------------------------------------------------------
 
 
@@ -30,7 +30,7 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_sets.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\abate_sets.gms
 # ----------------------------------------------------------------------------------------------------
 
 sets
@@ -39,87 +39,133 @@ sets
 	n
 ;
 
-alias(n,nn,nnn);
+alias(n,nnn,nn);
 
 sets
+	i_bra_no_CES_types[n]
+	i_bra_o_CES_types[n]
+	k2t[n,nn]
 	wT[n]
-	kno_out[n]
-	t_out_out[n]
-	i_kno_no_in[n]
-	i_bra_no_out[n]
-	fg[n]
-	i_bra_o_out[n]
-	i_kno_out[n]
-	i_kno_in[n]
-	map_all[n,nn]
-	i_bra_no_in[n]
-	map_test_out[n,nn]
+	u_subset[n]
+	i_bra_o_ES[n]
+	i_bra_no_ES[n]
+	i_kno_CES_types[n]
 	kno_inp[n]
-	i_bra_o_in[n]
-	t_out_in[n]
-	map_test_in[n,nn]
-	inp[n]
 	int[n]
-	out[n]
+	fg[n]
+	i_kno_ES[n]
+	i_kno_T_out[n]
+	q2p[n,nn]
+	map_ES[n,nn]
+	inp[n]
+	KT_subset[n]
+	q2p_CES_types[n,nn]
+	t_out_CES_types[n]
+	i_bra_o_T_out[n]
+	u2c[n,nn]
+	i_kno_no_CES_types[n]
+	c_subset[n]
+	i_kno_ESC[n]
+	i_kno_no_ESC[n]
 	alias_[alias_set,alias_map2]
+	map_all[n,nn]
+	kno_out[n]
+	map_CES_types[n,nn]
+	i_kno_no_ES[n]
+	i_bra_no_T_out[n]
+	mu_endo[n,nn]
+	out[n]
+	map_T_out[n,nn]
+	q2p_agg_CES_types[n]
+	i_bra_o_ESC[n]
+	i_bra_no_ESC[n]
+	PwT_dom[n]
+	c2e[n,nn]
+	t_out_T_out[n]
+	t_out_ES[n]
+	t_out_ESC[n]
+	map_ESC[n,nn]
 ;
-$GDXIN %test%
+$GDXIN %abate%
 $onMulti
 $load alias_map2
 $load alias_set
 $load n
-$load wT
+$load KT_subset
+$load t_out_CES_types
+$load i_bra_o_T_out
+$load i_bra_no_CES_types
+$load i_kno_no_CES_types
+$load c_subset
+$load i_bra_o_CES_types
+$load i_kno_ESC
+$load i_kno_no_ESC
 $load kno_out
-$load t_out_out
-$load i_kno_no_in
-$load i_bra_no_out
-$load fg
-$load i_bra_o_out
-$load i_kno_out
-$load i_kno_in
-$load i_bra_no_in
-$load kno_inp
-$load i_bra_o_in
-$load t_out_in
-$load inp
-$load int
+$load i_kno_no_ES
+$load wT
+$load u_subset
+$load i_bra_o_ES
+$load i_bra_no_T_out
 $load out
-$load map_all
-$load map_test_in
-$load map_test_out
+$load i_bra_no_ES
+$load i_kno_CES_types
+$load q2p_agg_CES_types
+$load kno_inp
+$load i_bra_o_ESC
+$load int
+$load i_bra_no_ESC
+$load fg
+$load i_kno_ES
+$load i_kno_T_out
+$load PwT_dom
+$load t_out_T_out
+$load t_out_ES
+$load t_out_ESC
+$load inp
+$load map_T_out
+$load q2p_CES_types
+$load u2c
+$load map_CES_types
 $load alias_
+$load map_all
+$load c2e
+$load k2t
+$load mu_endo
+$load q2p
+$load map_ES
+$load map_ESC
 $GDXIN
 $offMulti
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_parameters.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\abate_parameters.gms
 # ----------------------------------------------------------------------------------------------------
 
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_groups.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\abate_groups.gms
 # ----------------------------------------------------------------------------------------------------
 
 
-# ---------------------------------------------test_gtech---------------------------------------------
-#  Initialize test_gtech group
+# ---------------------------------------------abate_gtech--------------------------------------------
+#  Initialize abate_gtech group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
-VARIABLE mark_up[n] "";
-mark_up.L[n]$((out[n])) = 0;
 VARIABLE eta[n] "";
 eta.L[n]$((kno_out[n])) = 0;
-VARIABLE mu[n,nn] "";
-mu.L[n,nn]$((map_all[n,nn])) = 0;
+VARIABLE mark_up[n] "";
+mark_up.L[n]$((out[n])) = 0;
 VARIABLE sigma[n] "";
 sigma.L[n]$((kno_inp[n])) = 0;
+VARIABLE mu[n,nn] "";
+mu.L[n,nn]$((map_all[n,nn])) = 0;
 $onlisting
 
 
-# ----------------------------------------------test_gexo---------------------------------------------
-#  Initialize test_gexo group
+# ---------------------------------------------abate_gexo---------------------------------------------
+#  Initialize abate_gexo group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 VARIABLE PwT[n] "";
@@ -129,14 +175,34 @@ qS.L[n]$((out[n])) = 0;
 $onlisting
 
 
-# ---------------------------------------------test_gendo---------------------------------------------
-#  Initialize test_gendo group
+# ---------------------------------------------abate_gendo--------------------------------------------
+#  Initialize abate_gendo group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 VARIABLE PbT[n] "";
 PbT.L[n]$((out[n])) = 0;
 VARIABLE qD[n] "";
 qD.L[n]$((wT[n])) = 0;
+$onlisting
+
+
+# ------------------------------------------abate_g_techcalib-----------------------------------------
+#  Initialize abate_g_techcalib group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+VARIABLE theta_c[n] "";
+theta_c.L[n]$((u_subset[n])) = 0;
+VARIABLE theta_p[n] "";
+theta_p.L[n]$((c_subset[n])) = 0;
+VARIABLE cbar[n] "";
+cbar.L[n]$((KT_subset[n])) = 0;
+$onlisting
+
+
+# ------------------------------------------abate_g_calibendo-----------------------------------------
+#  Initialize abate_g_calibendo group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
 $onlisting
 $offlisting
   
@@ -159,7 +225,7 @@ $onlisting
     parameter load_qD[n] "";
     load_qD[n]$(((wT[n]))) = 0;
   
-  execute_load "%test%" 
+  execute_load "%abate%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
@@ -188,35 +254,20 @@ $onlisting
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    parameter load_mark_up[n] "";
-    load_mark_up[n]$(((out[n]))) = 0;
-  
-    parameter load_eta[n] "";
-    load_eta[n]$(((kno_out[n]))) = 0;
-  
     parameter load_mu[n,nn] "";
-    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+    load_mu[n,nn]$(((mu_endo[n,nn]))) = 0;
   
-    parameter load_sigma[n] "";
-    load_sigma[n]$(((kno_inp[n]))) = 0;
-  
-  execute_load "%test%" 
+  execute_load "%abate%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
- load_mark_up=mark_up.l  load_eta=eta.l  load_mu=mu.l  load_sigma=sigma.l ;
+ load_mu=mu.l ;
   
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
-  
-    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
-  
-    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
-  
-    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+    mu.l[n,nn]$(((mu_endo[n,nn]))) = load_mu[n,nn];
 $onlisting
 ;
 $offlisting
@@ -237,7 +288,7 @@ $onlisting
     parameter load_qS[n] "";
     load_qS[n]$(((out[n]))) = 0;
   
-  execute_load "%test%" 
+  execute_load "%abate%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
@@ -252,48 +303,194 @@ $onlisting
     qS.fx[n]$(((out[n]))) = load_qS[n];
 $onlisting
 ;
+$offlisting
+  
+# --------------------------------------------__load_group--------------------------------------------
+#  Initialize __load_group group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+$onlisting
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    parameter load_theta_c[n] "";
+    load_theta_c[n]$(((u_subset[n]))) = 0;
+  
+    parameter load_theta_p[n] "";
+    load_theta_p[n]$(((c_subset[n]))) = 0;
+  
+    parameter load_cbar[n] "";
+    load_cbar[n]$(((KT_subset[n]))) = 0;
+  
+  execute_load "%abate%" 
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+ load_theta_c=theta_c.l  load_theta_p=theta_p.l  load_cbar=cbar.l ;
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    theta_c.fx[n]$(((u_subset[n]))) = load_theta_c[n];
+  
+    theta_p.fx[n]$(((c_subset[n]))) = load_theta_p[n];
+  
+    cbar.fx[n]$(((KT_subset[n]))) = load_cbar[n];
+$onlisting
+;
+$offlisting
+  
+# --------------------------------------------__load_group--------------------------------------------
+#  Initialize __load_group group
+# ----------------------------------------------------------------------------------------------------
+$offlisting
+$onlisting
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    parameter load_eta[n] "";
+    load_eta[n]$(((kno_out[n]))) = 0;
+  
+    parameter load_mark_up[n] "";
+    load_mark_up[n]$(((out[n]))) = 0;
+  
+    parameter load_sigma[n] "";
+    load_sigma[n]$(((kno_inp[n]))) = 0;
+  
+    parameter load_mu[n,nn] "";
+    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+  
+  execute_load "%abate%" 
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+ load_eta=eta.l  load_mark_up=mark_up.l  load_sigma=sigma.l  load_mu=mu.l ;
+  
+# ----------------------------------------------------------------------------------------------------
+#  Loop over __load_group
+# ----------------------------------------------------------------------------------------------------
+
+    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+  
+    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
+  
+    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+  
+    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+$onlisting
+;
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_blocks.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\abate_blocks.gms
 # ----------------------------------------------------------------------------------------------------
 
 
-# ------------------------------------------------M_in------------------------------------------------
-#  Initialize M_in equation block
+# ---------------------------------------------M_CES_types--------------------------------------------
+#  Initialize M_CES_types equation block
 # ----------------------------------------------------------------------------------------------------
-EQUATION E_pindex_o_in[n];
-E_pindex_o_in[n]$(t_out_in[n]).. 	PbT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
-EQUATION E_pindex_no_in[n];
-E_pindex_no_in[n]$(i_kno_no_in[n]).. 	PwT[n]  =E=  sum(nn$(map_test_in[nn,n]), qD[nn]*PwT[nn])/qD[n];
-EQUATION E_quant_o_in[n];
-E_quant_o_in[n]$(i_bra_o_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), mu[n,nn]* exp((PbT[nn]-PwT[n])/sigma[nn])*qS[nn] / sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn]* exp((PbT[nn]-PwT[nnn])/sigma[nn])));
-EQUATION E_quant_no_in[n];
-E_quant_no_in[n]$(i_bra_no_in[n]).. 	qD[n]  =E=  sum(nn$(map_test_in[n,nn]), mu[n,nn]* exp((PwT[nn]-PwT[n])/sigma[nn])*qD[nn] / sum(nnn$(map_test_in[nnn,nn]), mu[nnn,nn]* exp((PwT[nn]-PwT[nnn])/sigma[nn])));
+EQUATION E_pindex_o_CES_types[n];
+E_pindex_o_CES_types[n]$((t_out_ces_types[n]) and sigma.l[n] <> 1).. 	PbT[n]  =E=  sum(nn$(map_CES_types[nn,n]), mu[nn,n] * sum(nnn$(q2p_CES_types[nn,nnn]), PwT[nnn])**(1-sigma[n]))**(1/(1-sigma[n]));
+EQUATION E_pindex_no_CES_types[n];
+E_pindex_no_CES_types[n]$((i_kno_no_ces_types[n]) and sigma.l[n] <> 1).. 	PwT[n]  =E=  sum(nn$(map_CES_types[nn,n]), mu[nn,n] * sum(nnn$(q2p_CES_types[nn,nnn]), PwT[nnn])**(1-sigma[n]))**(1/(1-sigma[n]));
+EQUATION E_pindex_CD_o_CES_types[n];
+E_pindex_CD_o_CES_types[n]$((t_out_ces_types[n]) and sigma.l[n] = 1).. 	PbT[n]  =E=  prod(nn$(map_CES_types[nn,n]), sum(nnn$(q2p_CES_types[nn,nnn]),PwT[nnn])**(mu[nn,n]));
+EQUATION E_pindex_CD_no_CES_types[n];
+E_pindex_CD_no_CES_types[n]$((i_kno_no_ces_types[n]) and sigma.l[n] = 1).. 	PwT[n]  =E=  prod(nn$(map_CES_types[nn,n]), sum(nnn$(q2p_CES_types[nn,nnn]),PwT[nnn])**(mu[nn,n]));
+EQUATION E_quant_o_CES_types[n];
+E_quant_o_CES_types[n]$(i_bra_o_ces_types[n]).. 	qD[n]  =E=  sum(nn$(map_CES_types[n,nn]), mu[n,nn] * (PbT[nn]/sum(nnn$(q2p_CES_types[n,nnn]),PwT[nnn]))**(sigma[nn]) * qS[nn]);
+EQUATION E_quant_no_CES_types[n];
+E_quant_no_CES_types[n]$(i_bra_no_ces_types[n]).. 	qD[n]  =E=  sum(nn$(map_CES_types[n,nn]), mu[n,nn] * (PwT[nn]/sum(nnn$(q2p_CES_types[n,nnn]),PwT[nnn]))**(sigma[nn]) * qD[nn]);
+EQUATION E_qagg_CES_types[n];
+E_qagg_CES_types[n]$(q2p_agg_ces_types[n]).. 	qD[n]  =E=  sum(nn$(q2p_CES_types[nn,n]), qD[nn]);
 
 # ----------------------------------------------------------------------------------------------------
-#  Define M_in model
+#  Define M_CES_types model
 # ----------------------------------------------------------------------------------------------------
-Model M_in /
-E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in
+Model M_CES_types /
+E_pindex_o_CES_types, E_pindex_no_CES_types, E_pindex_CD_o_CES_types, E_pindex_CD_no_CES_types, E_quant_o_CES_types, E_quant_no_CES_types, E_qagg_CES_types
 /;
 
 
-# ------------------------------------------------M_out-----------------------------------------------
-#  Initialize M_out equation block
+# ------------------------------------------------M_ES------------------------------------------------
+#  Initialize M_ES equation block
 # ----------------------------------------------------------------------------------------------------
-EQUATION E_pindex_out[n];
-E_pindex_out[n]$(i_kno_out[n]).. 	PwT[n]  =E=  (sum(nn$(map_test_out[nn,n] and out[nn]), qS[nn]*PbT[nn])+sum(nn$(map_test_out[nn,n] and not out[nn]), qD[nn]*PwT[nn]))/qD[n];
-EQUATION E_quant_o_out[n];
-E_quant_o_out[n]$(i_bra_o_out[n]).. 	qS[n]  =E=  sum(nn$(map_test_out[n,nn]),  exp((PwT[nn]-PbT[n])/eta[nn])*qD[nn] / (sum(nnn$(map_test_out[nnn,nn] and out[nnn]),  exp((PwT[nn]-PbT[nnn])/eta[nn]))+sum(nnn$(map_test_out[nnn,nn] and not out[nnn]),  exp((PwT[nn]-PwT[nnn])/eta[nn]))));
-EQUATION E_quant_no_out[n];
-E_quant_no_out[n]$(i_bra_no_out[n]).. 	qD[n]  =E=  sum(nn$(map_test_out[n,nn]),  exp((PwT[nn]-PwT[n])/eta[nn])*qD[nn] / (sum(nnn$(map_test_out[nnn,nn] and out[nnn]),  exp((PwT[nn]-PbT[nnn])/eta[nn]))+sum(nnn$(map_test_out[nnn,nn] and not out[nnn]),  exp((PwT[nn]-PwT[nnn])/eta[nn]))));
+EQUATION E_pindex_o_ES[n];
+E_pindex_o_ES[n]$(t_out_es[n]).. 	PbT[n]  =E=  sum(nn$(map_ES[nn,n]), qD[nn]*PwT[nn])/qS[n];
+EQUATION E_pindex_no_ES[n];
+E_pindex_no_ES[n]$(i_kno_no_es[n]).. 	PwT[n]  =E=  sum(nn$(map_ES[nn,n]), qD[nn]*PwT[nn])/qD[n];
+EQUATION E_quant_o_ES[n];
+E_quant_o_ES[n]$(i_bra_o_es[n]).. 	qD[n]  =E=  sum(nn$(map_ES[n,nn]), (mu[n,nn] * (PbT[nn]/PwT[n])**(sigma[nn]) * qS[nn])/sum(nnn$(map_ES[nnn,nn]), mu[nnn,nn] *(PbT[nn]/PwT[nnn])**(sigma[nn])));
+EQUATION E_quant_no_ES[n];
+E_quant_no_ES[n]$(i_bra_no_es[n]).. 	qD[n]  =E=  sum(nn$(map_ES[n,nn]), (mu[n,nn] * (PwT[nn]/PwT[n])**(sigma[nn]) * qD[nn])/sum(nnn$(map_ES[nnn,nn]), mu[nnn,nn] *(PwT[nn]/PwT[nnn])**(sigma[nn])));
 
 # ----------------------------------------------------------------------------------------------------
-#  Define M_out model
+#  Define M_ES model
 # ----------------------------------------------------------------------------------------------------
-Model M_out /
-E_pindex_out, E_quant_o_out, E_quant_no_out
+Model M_ES /
+E_pindex_o_ES, E_pindex_no_ES, E_quant_o_ES, E_quant_no_ES
+/;
+
+
+# ------------------------------------------------M_ESC-----------------------------------------------
+#  Initialize M_ESC equation block
+# ----------------------------------------------------------------------------------------------------
+EQUATION E_pindex_o_ESC[n];
+E_pindex_o_ESC[n]$(t_out_esc[n]).. 	PbT[n]  =E=  sum(nn$(map_ESC[nn,n]), qD[nn]*PwT[nn])/qS[n];
+EQUATION E_pindex_no_ESC[n];
+E_pindex_no_ESC[n]$(i_kno_no_esc[n]).. 	PwT[n]  =E=  sum(nn$(map_ESC[nn,n]), qD[nn]*PwT[nn])/qD[n];
+EQUATION E_quant_o_ESC[n];
+E_quant_o_ESC[n]$(i_bra_o_esc[n]).. 	qD[n]  =E=  sum(nn$(map_ESC[n,nn]), mu[n,nn]* exp((PbT[nn]-PwT[n])/sigma[nn])*qS[nn] / sum(nnn$(map_ESC[nnn,nn]), mu[nnn,nn]* exp((PbT[nn]-PwT[nnn])/sigma[nn])));
+EQUATION E_quant_no_ESC[n];
+E_quant_no_ESC[n]$(i_bra_no_esc[n]).. 	qD[n]  =E=  sum(nn$(map_ESC[n,nn]), mu[n,nn]* exp((PwT[nn]-PwT[n])/sigma[nn])*qD[nn] / sum(nnn$(map_ESC[nnn,nn]), mu[nnn,nn]* exp((PwT[nn]-PwT[nnn])/sigma[nn])));
+
+# ----------------------------------------------------------------------------------------------------
+#  Define M_ESC model
+# ----------------------------------------------------------------------------------------------------
+Model M_ESC /
+E_pindex_o_ESC, E_pindex_no_ESC, E_quant_o_ESC, E_quant_no_ESC
+/;
+
+
+# -----------------------------------------------M_T_out----------------------------------------------
+#  Initialize M_T_out equation block
+# ----------------------------------------------------------------------------------------------------
+EQUATION E_pindex_T_out[n];
+E_pindex_T_out[n]$(i_kno_t_out[n]).. 	PwT[n]  =E=  (sum(nn$(map_T_out[nn,n] and out[nn]), mu[nn,n] * PbT[nn]**(1-eta[n]))+sum(nn$(map_T_out[nn,n] and not out[nn]), mu[nn,n] * PwT[nn]**(1-eta[n])))**(1/(1-eta[n]));
+EQUATION E_quant_o_T_out[n];
+E_quant_o_T_out[n]$(i_bra_o_t_out[n]).. 	qS[n]  =E=  sum(nn$(map_T_out[n,nn]), mu[n,nn] * (PbT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+EQUATION E_quant_no_T_out[n];
+E_quant_no_T_out[n]$(i_bra_no_t_out[n]).. 	qD[n]  =E=  sum(nn$(map_T_out[n,nn]), mu[n,nn] * (PwT[n]/PwT[nn])**(-eta[nn]) * qD[nn]);
+
+# ----------------------------------------------------------------------------------------------------
+#  Define M_T_out model
+# ----------------------------------------------------------------------------------------------------
+Model M_T_out /
+E_pindex_T_out, E_quant_o_T_out, E_quant_no_T_out
+/;
+
+
+ 
+# -----------------------------------------------M_calib----------------------------------------------
+#  Initialize M_calib equation block
+# ----------------------------------------------------------------------------------------------------
+EQUATION E_uc_calib[n];
+E_uc_calib[n]$(kt_subset[n]).. 	qD[n]  =E=  cbar[n] * sum(nn$(k2t[n,nn]), qD[nn]) / sum(nnn$(q2p[n,nnn]),PwT[nnn]);
+EQUATION E_currapp_calib[n];
+E_currapp_calib[n]$(u_subset[n]).. 	qD[n]  =E=  theta_c[n] * sum(nn$(u2c[n,nn]), sum(nnn$(c2e[nn,nnn]), qD[nnn]));
+EQUATION E_potapp_calib[n];
+E_potapp_calib[n]$(c_subset[n]).. 	qD[n]  =E=  theta_p[n] * sum(nn$(c2e[n,nn]), qD[nn]);
+
+# ----------------------------------------------------------------------------------------------------
+#  Define M_calib model
+# ----------------------------------------------------------------------------------------------------
+Model M_calib /
+E_uc_calib, E_currapp_calib, E_potapp_calib
 /;
 
 ;
@@ -304,19 +501,22 @@ E_pindex_out, E_quant_o_out, E_quant_no_out
 # ----------------------------------------------------------------------------------------------------
 
 
-# ----------------------------------------------------------------------------------------------------$FIX test_gtech, test_gexo;
+# ----------------------------------------------------------------------------------------------------$FIX abate_gtech, abate_gexo, abate_g_techcalib;
 # ----------------------------------------------------------------------------------------------------
 $offlisting
-mark_up.FX[n]$((out[n])) = mark_up.L[n];
 eta.FX[n]$((kno_out[n])) = eta.L[n];
-mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
+mark_up.FX[n]$((out[n])) = mark_up.L[n];
 sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
+mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
 PwT.FX[n]$((inp[n])) = PwT.L[n];
 qS.FX[n]$((out[n])) = qS.L[n];
+theta_c.FX[n]$((u_subset[n])) = theta_c.L[n];
+theta_p.FX[n]$((c_subset[n])) = theta_p.L[n];
+cbar.FX[n]$((KT_subset[n])) = cbar.L[n];
 $onlisting
 
 
-# ----------------------------------------------------------------------------------------------------$UNFIX test_gendo;
+# ----------------------------------------------------------------------------------------------------$UNFIX abate_gendo, abate_g_calibendo;
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 PbT.lo[n]$((out[n])) = -inf;
@@ -325,16 +525,18 @@ PwT.lo[n]$((int[n])) = -inf;
 PwT.up[n]$((int[n])) = inf;
 qD.lo[n]$((wT[n])) = -inf;
 qD.up[n]$((wT[n])) = inf;
+mu.lo[n,nn]$((mu_endo[n,nn])) = -inf;
+mu.up[n,nn]$((mu_endo[n,nn])) = inf;
 $onlisting
 
 
 # ----------------------------------------------------------------------------------------------------
-#  Define test model
+#  Define abate model
 # ----------------------------------------------------------------------------------------------------
-Model test /
-E_pindex_o_in, E_pindex_no_in, E_quant_o_in, E_quant_no_in, E_pindex_out, E_quant_o_out, E_quant_no_out
+Model abate /
+E_pindex_o_CES_types, E_pindex_no_CES_types, E_pindex_CD_o_CES_types, E_pindex_CD_no_CES_types, E_quant_o_CES_types, E_quant_no_CES_types, E_qagg_CES_types, E_pindex_o_ES, E_pindex_no_ES, E_quant_o_ES, E_quant_no_ES, E_pindex_o_ESC, E_pindex_no_ESC, E_quant_o_ESC, E_quant_no_ESC, E_pindex_T_out, E_quant_o_T_out, E_quant_no_T_out, E_uc_calib, E_currapp_calib, E_potapp_calib
 /;
 
 
-solve test using CNS;
+solve abate using CNS;
 ;

@@ -117,5 +117,5 @@ class tree_from_data(nt):
 	"""
 	def __init__(self,data_path,mu='mu',setdim=2,tree_name="",**kwargs):
 		db = DataBase.py_db(name=tree_name)
-		db.read_from_excel(data_path,{'vars_panel': {mu: setdim}})
+		db.read_from_excel(data_path,{'vars_panel': {'sheets': {mu: setdim}}})
 		super().__init__(tree_name=tree_name,tree=nt.tree_from_mu(db[mu]),**{**{'setname':db[mu].index.names[0], 'alias': db[mu].index.names[1]}, **kwargs})

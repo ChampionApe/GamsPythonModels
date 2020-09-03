@@ -1,8 +1,8 @@
 $GROUP test_gtech
+	sigma[n]$((kno_inp[n])) ""
+	mu[n,nn]$((map_all[n,nn])) ""
 	mark_up[n]$((out[n])) ""
 	eta[n]$((kno_out[n])) ""
-	mu[n,nn]$((map_all[n,nn])) ""
-	sigma[n]$((kno_inp[n])) ""
 ;
 
 $GROUP test_gexo 
@@ -17,5 +17,5 @@ $GROUP test_gendo
 ;
 
 @load_level(test_gendo,%qmark%%test%");
-@load_fixed(test_gexo ,%qmark%%test%");
 @load_fixed(test_gtech,%qmark%%test%");
+@load_fixed(test_gexo ,%qmark%%test%");

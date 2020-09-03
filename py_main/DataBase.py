@@ -87,6 +87,9 @@ def traverse(o, tree_types=(list,tuple,pd.Index)):
 def empty_as_list(x):
 	return [] if x is None else x
 
+def res_or_def(x,kwargs,df):
+	return df if x not in kwargs else kwargs[x]
+
 # Class of items when retrieving from a database:
 class gpy_symbol:
 	"""
@@ -485,28 +488,28 @@ class py_db:
 	def read_from_excel(self,xlsx_file,read_type):
 		wb = openpyxl.load_workbook(filename=xlsx_file, read_only=True, data_only=True)
 		if '1dvars' in read_type:
-			py_db.read_1dvars_from_excel(self.db_pd,wb,read_type['1dvars'])
+			py_db.read_1dvars_from_excel(self.db_pd,wb,read_type['1dvars']['sheets'],names=read_type['1dvars']['names'])
 		if 'vars_matrix' in read_type:
-			py_db.read_2dvars_from_excel_matrix(self.db_pd,wb,read_type['vars_matrix'])
+			py_db.read_2dvars_from_excel_matrix(self.db_pd,wb,read_type['vars_matrix']['sheets'], names = read_type['vars_matrix']['names'])
 		if 'vars_panel' in read_type:
-			py_db.read_vars_from_excel_panel(self.db_pd,wb,read_type['vars_panel'])
+			py_db.read_vars_from_excel_panel(self.db_pd,wb,read_type['vars_panel']['sheets'])
 		if 'maps_matrix' in read_type:
-			py_db.read_maps_from_excel_matrix(self.db_pd,wb,read_type['maps_matrix'])
+			py_db.read_maps_from_excel_matrix(self.db_pd,wb,read_type['maps_matrix']['sheets'], names = read_type['maps_matrix']['names'])
 		if 'maps_panel' in read_type:
-			py_db.read_maps_from_excel_panel(self.db_pd,wb,read_type['maps_panel'])
+			py_db.read_maps_from_excel_panel(self.db_pd,wb,read_type['maps_panel']['sheets'], names = read_type['maps_panel']['names'])
 		if 'subsets' in read_type:
-			py_db.read_subsets_from_excel(self.db_pd,wb,read_type['subsets'])
+			py_db.read_subsets_from_excel(self.db_pd,wb,read_type['subsets']['sheets'], names = read_type['subsets']['sheets'])
 		wb.close()
 
 	@staticmethod 
-	def read_subsets_from_excel(db,wb,sheets,priority='second'):
+	def read_subsets_from_excel(db,wb,sheets,names={},priority='second'):
 		for sheet in sheets:
 			temp = pd.DataFrame(wb[sheet].values)
 			symbol = pd.Index(temp.iloc[1:,0],name=temp.iloc[0,0])
-			py_db.add_or_merge(db,symbol,sheet,priority)
+			py_db.add_or_merge(db,symbol,res_or_def(sheet,names,sheet),priority)
 
 	@staticmethod
-	def read_1dvars_from_excel(db,wb,sheets,priority='second'):
+	def read_1dvars_from_excel(db,wb,sheets,names={},priority='second'):
 		for sheet in sheets:
 			temp = pd.DataFrame(wb[sheet].values)
 			if min(temp.shape)>1:
@@ -516,13 +519,13 @@ class py_db:
 					py_db.add_or_merge(db,symbol,namevar,priority)
 
 	@staticmethod
-	def read_2dvars_from_excel_matrix(db,wb,sheets,priority='second'):
+	def read_2dvars_from_excel_matrix(db,wb,sheets,names={},priority='second'):
 		for sheet in sheets:
 			temp = pd.DataFrame(wb[sheet].values)
 			if min(temp.shape)>1:
 				tappy = pd.DataFrame(temp.iloc[1:,1:].values, index = temp.iloc[1:,0], columns=temp.iloc[0,1:]).stack()
 				tappy.index.names = temp.iloc[0,0].split('/')
-				tappy.name = sheet
+				tappy.name = res_or_def(sheet,names,sheet) # look for sheet in names. If it appears name = names[sheet], else name = sheet.
 				py_db.add_or_merge(db,tappy,sheet,priority)
 
 	@staticmethod
@@ -547,7 +550,7 @@ class py_db:
 						py_db.add_or_merge(db,symbol,temp.iloc[0,var],priority)
 
 	@staticmethod
-	def read_maps_from_excel_matrix(db,wb,sheets,priority='second'):
+	def read_maps_from_excel_matrix(db,wb,sheets,names={},priority='second'):
 		for sheet in sheets:
 			temp = pd.DataFrame(wb[sheet].values)
 			if temp.shape[0]>1:
@@ -558,13 +561,14 @@ class py_db:
 					py_db.add_or_merge(db,symbol,common_set+'2'+maps_to,priority)
 
 	@staticmethod
-	def read_maps_from_excel_panel(db,wb,sheets,priority='second'):
+	def read_maps_from_excel_panel(db,wb,sheets,names={},priority='second'):
 		for sheet in sheets:
 			temp = pd.DataFrame(wb[sheet].values)
 			if temp.shape[0]>1:
 				sets = list(pd.DataFrame(wb[sheet].values).iloc[0,:])
 				symbol = pd.MultiIndex.from_frame(pd.DataFrame(wb[sheet].values).iloc[1:,:], names = sets)
-				py_db.add_or_merge(db,symbol,'2'.join(sets),priority)
+				name = '2'.join(sets) if sheet not in names else names[sheet]
+				py_db.add_or_merge(db,symbol,name,priority)
 
 	###################################################################################################
 	###								4: METHODS FOR AGGREGATING A DATABASE	 						###

@@ -1,12 +1,7 @@
-import os
-import shutil
-import pickle
-import pandas as pd
+import os, shutil, pickle, pandas as pd, DataBase, regex_gms
 from gams import *
 from dreamtools.gams_pandas import *
 from dreamtools.gamY import Precompiler
-import DataBase
-import regex_gms
 
 def database_type(database):
 	if isinstance(database,str):

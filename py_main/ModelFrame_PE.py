@@ -1,12 +1,4 @@
-import os
-import gams
-import pandas as pd
-import DataBase
-import COE
-import COE_settings
-import regex_gms
-import nesting_tree
-import DB2Gams
+import os, gams, pandas as pd, DataBase, COE, COE_settings, regex_gms, nesting_tree, DB2Gams
 
 def apply_type(type_,version):
 	return eval(f"COE.{type_}")(version=version)
@@ -154,7 +146,7 @@ class GPM_STA_PE:
 			To write a gams class, three dicts of information is needed: (1) domains of equations, (2) conditions on equations, (3) symbols needed.
 			this information is collected here.
 			"""
-			out = {'domains': None, 'conditions': None, 'symboltext': None}
+			out = {'domains': None, 'conditions': None, 'vartext': None}
 			settings = apply_type_settings(self.locals[local]['type_f'],version=self.locals[local]['version'])
 			out['domains'] = {k: self.aux_write(v,dom=True) for k,v in settings.doms.items()}
 			out['conditions'] = {k: self.aux_write(v,local=local) for k,v in settings.conds.items()}
@@ -175,7 +167,7 @@ class GPM_STA_PE:
 
 		def aux_write(self,symbol,local=None,a=None,dom=False,l=''):
 			"""
-			Write symbol with various alias' of 'n'. 
+			Write symbol with various alias' of 'n'.
 			"""
 			if symbol is 'n':
 				return self.globals['sets']['n'] if a is None else self.alias(a)[self.globals['sets']['n']]

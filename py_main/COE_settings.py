@@ -66,7 +66,7 @@ class CES:
 					'sigma': afl({'a': [None,'a_aa',None], 'l': ['','','.l']}),
 					'map_': afl({'a': [None,['a_aa','aa_a']]}),
 					'n'  : afl({'a': ['a_aa','a_aaa']}),
-					'q2p': afl({'a': [None,['a_aa','aa_aaa'], 'aa_aaa']})}
+					'q2p': afl({'a': [['a_aa','aa_a'],['a_aa','aa_aaa'], 'aa_aaa']})}
 
 class CET:
 	"""
@@ -120,7 +120,7 @@ class norm_CES:
 		if self.version is 'std':
 			return {'PbT': afl({'a': [None, 'a_aa']}),
 					'PwT': afl({'a': [None, 'a_aa','a_aaa']}),
-					'qS' : afl({'a': ['a_aa']}),
+					'qS' : afl({'a': [None,'a_aa']}),
 					'qD' : afl({'a': [None, 'a_aa']}),
 					'mu' : afl({'a': [None, 'a_aaa']}),
 					'sigma': afl({'a': ['a_aa']}),
@@ -180,7 +180,7 @@ class MNL:
 		if self.version is 'std':
 			return {'PbT': afl({'a': [None, 'a_aa']}),
 					'PwT': afl({'a': [None, 'a_aa','a_aaa']}),
-					'qS' : afl({'a': ['a_aa']}),
+					'qS' : afl({'a': [None,'a_aa']}),
 					'qD' : afl({'a': [None, 'a_aa']}),
 					'sigma': afl({'a': ['a_aa']}),
 					'map_': afl({'a': [None,['a_aa','aa_a'],'a_aaa']}),
@@ -188,7 +188,7 @@ class MNL:
 		elif self.version is 'MNL_w_mu':
 			return {'PbT': afl({'a': [None, 'a_aa']}),
 					'PwT': afl({'a': [None, 'a_aa','a_aaa']}),
-					'qS' : afl({'a': ['a_aa']}),
+					'qS' : afl({'a': [None,'a_aa']}),
 					'qD' : afl({'a': [None, 'a_aa']}),
 					'mu' : afl({'a': [None, 'a_aaa']}),
 					'sigma': afl({'a': ['a_aa']}),

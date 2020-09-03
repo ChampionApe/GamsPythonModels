@@ -124,7 +124,7 @@ class CES:
 		"""
 		Define demand as sum over q2p terms.
 		"""
-		return equation(e_name,domains,conditions,qD['b'],sums.ss(n['a_aa'],q2p['b'],qD['a_aa']))
+		return equation(e_name,domains,conditions,qD['b'],sums.ss(n['a_aa'],q2p['a_aa.aa_a'],qD['a_aa']))
 
 class norm_CES:
 	"""
@@ -138,23 +138,24 @@ class norm_CES:
 		Map dictionaries with variables to equations and collect in one string.
 		"""
 		out  = self.p_index(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
-			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['n'],vartext['map_'],output=True)+'\n\t'
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['n'],vartext['map_'],output=True)+'\n\t'
 		out += self.p_index(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
-			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['n'],vartext['map_'],output=False)+'\n\t'
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['n'],vartext['map_'],output=False)+'\n\t'
 		out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
 			vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=True)+'\n\t'
 		out += self.demand(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
 			vartext['qS'],vartext['PbT'],vartext['qD'],vartext['PwT'],vartext['mu'],vartext['sigma'],vartext['n'],vartext['map_'],output=False)
 		return out
 
-	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,n,map_,output=False):
+	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,qS,n,map_,output=False):
 		"""
 		Weighted average price index.
 		"""
-		RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qD['b']}"""
 		if output is True:
+			RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qS['b']}"""
 			return equation(e_name,domains,conditions,PbT['b'],RHS)
 		else:
+			RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qD['b']}"""
 			return equation(e_name,domains,conditions,PwT['b'],RHS)
 
 	def demand(self,e_name,domains,conditions,qS,PbT,qD,PwT,mu,sigma,n,map_,output=False):
@@ -250,23 +251,24 @@ class MNL:
 		if self.version is 'std':
 			vartext['mu'] = False
 		out  = self.p_index(f"E_pindex_o_{name}", domains['p_index_o'], conditions['p_index_o'],
-			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['n'],vartext['map_'],output=True)+'\n\t'
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['n'],vartext['map_'],output=True)+'\n\t'
 		out += self.p_index(f"E_pindex_no_{name}", domains['p_index_no'], conditions['p_index_no'],
-			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['n'],vartext['map_'],output=False)+'\n\t'
+			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['n'],vartext['map_'],output=False)+'\n\t'
 		out += self.demand(f"E_quant_o_{name}", domains['quant_o'], conditions['quant_o'],
 			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['sigma'],vartext['n'],vartext['map_'],mu=vartext['mu'],output=True)+'\n\t'
 		out += self.demand(f"E_quant_no_{name}", domains['quant_no'],conditions['quant_no'],
 			vartext['PbT'],vartext['PwT'],vartext['qD'],vartext['qS'],vartext['sigma'],vartext['n'],vartext['map_'],mu=vartext['mu'],output=False)
 		return out
 
-	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,n,map_,output=False):
+	def p_index(self,e_name,domains,conditions,PbT,PwT,qD,qS,n,map_,output=False):
 		"""
 		Weighted average price index.
 		"""
-		RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qD['b']}"""
 		if output is True:
+			RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qS['b']}"""
 			return equation(e_name,domains,conditions,PbT['b'],RHS)
 		else:
+			RHS = f"""sum({n['a_aa']}$({map_['a_aa.aa_a']}), {qD['a_aa']}*{PwT['a_aa']})/{qD['b']}"""
 			return equation(e_name,domains,conditions,PwT['b'],RHS)
 
 	def demand(self,e_name,domains,conditions,PbT,PwT,qD,qS,sigma,n,map_,mu=False,output=False):
