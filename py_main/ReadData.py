@@ -7,7 +7,7 @@ def clean(db,clean_data):
 			db[var] = db[var].dropna()
 	return db
 
-def read_data(data,export_to,clean_data=[np.nan,'NA',0]):
+def read_data(data,export_to=False,clean_data=[np.nan,'NA',0]):
 	"""
 	Read in production values/prices/quantities from 'data', and export to 'export_to'.
 	"""
@@ -62,5 +62,34 @@ def read_data(data,export_to,clean_data=[np.nan,'NA',0]):
 	# clean data:
 	clean(db,clean_data)
 	# export data:
-	db.merge_internal()
-	db.db_Gdx.export(export_to)
+	if export_to is not False:
+		db.merge_internal()
+		db.db_Gdx.export(export_to)
+	return db
+
+def PE_from_GE(db_GE,setvalue,setname='s'):
+	db_new = DataBase.py_db()
+	if 'alias_set' in db_GE:
+		if not (len(db_GE['alias_set'])==1 and (db_GE['alias_set']==setname).any()):
+			db_new['alias_set'] = db_GE['alias_set'][db_GE['alias_set']!=setname]
+			db_new['alias_map2'] = db_GE['alias_map2'][~db_GE['alias_map2'].isin(db_GE.alias_all[setname])]
+			db_new['alias_'] = db_GE['alias_'][db_GE['alias_'].get_level_values(0)!=setname]
+	for set_ in (set(db_GE.sets['sets'])-set(db_GE.alias_all[setname])-set(setname)-set(['alias_set','alias_map2'])):
+		db_new[set_] = db_GE[set_]
+	for set_ in db_GE.sets['subsets']:
+		if set_ not in db_new and db_GE[set_].name!=setname:
+			db_new[set_] = db_GE[set_]
+	for set_ in db_GE.sets['mappings']:
+		if set_!='alias_':
+			db_new[set_] = db_GE[set_] if setname not in db_GE[set_].names else db_GE[set_][db_GE[set_].get_level_values(setname)!=setvalue].droplevel(level=setname).unique()
+	for scalar in db_GE.variables['scalar_variables']:
+		db_new[scalar] = db_GE[scalar]
+	for scalar in db_GE.parameters['scalar_parameters']:
+		db_new[scalar] = db_GE[scalar]
+	for var in db_GE.variables['variables']:
+		db_new[var] = db_GE[var] if setname not in db_GE[var].index.names else db_GE[var][db_GE[var].index.get_level_values(setname)==setvalue].droplevel(setname)
+		db_new[var].attrs['type'] = 'variable'
+	for par in db_GE.parameters['parameters']:
+		db_new[par] = db_GE[par] if setname not in db_GE[par].index.names else db_GE[par][db_GE[par].index.get_level_values(setname)==setvalue].droplevel(setname)
+		db_new[par].attrs['type'] = 'parameter'
+	return db_new
