@@ -1,8 +1,8 @@
 $GROUP abate_gtech
 	eta[n]$((kno_out[n])) ""
-	mark_up[n]$((out[n])) ""
-	sigma[n]$((kno_inp[n])) ""
 	mu[n,nn]$((map_all[n,nn])) ""
+	sigma[n]$((kno_inp[n])) ""
+	mark_up[n]$((out[n])) ""
 ;
 
 $GROUP abate_gexo 
@@ -28,6 +28,6 @@ $GROUP abate_g_calibendo
 
 @load_level(abate_gendo,%qmark%%abate%");
 @load_level(abate_g_calibendo,%qmark%%abate%");
-@load_fixed(abate_gexo ,%qmark%%abate%");
 @load_fixed(abate_g_techcalib,%qmark%%abate%");
 @load_fixed(abate_gtech,%qmark%%abate%");
+@load_fixed(abate_gexo ,%qmark%%abate%");
