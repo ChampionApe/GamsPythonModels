@@ -1,4 +1,4 @@
-import pandas as pd, DataBase, nesting_trees
+import pandas as pd, DataBase, nesting_trees, DataBase_wheels
 
 def df(x,kwargs):
 	"""
@@ -35,6 +35,14 @@ class nesting_tree:
 		[self.trees[tree].run_all(**kwargs) if tree not in Q2Ps else self.trees[tree].run_all(Q2P=Q2Ps[tree],**kwargs) for tree in self.trees];
 		self.aggregate_sector(**kwargs)
 		self.prune_trees()
+		self.reverse_temp_namespace()
+
+	def reverse_temp_namespace(self):
+		combine_temp_namespaces = [self.trees[tree].temp_namespace for tree in self.trees if self.trees[tree].temp_namespace is not None]
+		reverse_namespace = {v: k for dict_ in combine_temp_namespaces for k,v in dict_.items()}
+		DataBase_wheels.small_updates.set_values(self.database,self.setname,reverse_namespace)
+		for tree in self.trees:
+			DataBase_wheels.small_updates.set_values(self.trees[tree].database,self.setname,reverse_namespace)
 
 	def aggregate_sector(self,**kwargs):
 		"""

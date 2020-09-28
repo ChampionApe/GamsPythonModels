@@ -1,5 +1,6 @@
 import pandas as pd
 import DataBase
+import DataBase_wheels
 
 class nt:
 	"""
@@ -18,12 +19,17 @@ class nt:
 		self.bra = 'bra_'+self.name # branches
 		self.inp = 'inp_'+self.name # inputs: Branch, not knot
 		self.out = 'out_'+self.name # outputs: Knot, not branch.
+		self.temp_namespace = None # Dictionary/mapping that can be applied to pandas indices.
 		self.update(kwargs)
 		if self.type_io=='input' and 'type_f' not in kwargs:
 			self.type_f = 'CES' # set default type to ces
 		elif self.type_io=='output' and 'type_f' not in kwargs:
 			self.type_f = 'CET' # set default type to cet
 		self.database = DataBase.py_db(name=self.name,alias=pd.MultiIndex.from_tuples([(self.setname,self.alias), (self.setname, self.alias2)]))
+
+	def apply_namespace(self):
+		if self.temp_namespace is not None:
+			return DataBase_wheels.small_updates.set_values(self.database,self.setname,self.temp_namespace)
 
 	def run_all(self,Q2P=None,**kwargs):
 		self.mapping_from_tree()
@@ -35,6 +41,7 @@ class nt:
 		self.add_alias()
 		if self.version =='Q2P':
 			self.version_Q2P(Q2P,**kwargs)
+		self.apply_namespace()
 
 	def mapping_from_tree(self):
 		temp = []

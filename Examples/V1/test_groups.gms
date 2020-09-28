@@ -1,8 +1,8 @@
 $GROUP test_gtech
-	mu[n,nn]$((map_all[n,nn])) ""
 	sigma[n]$((kno_inp[n])) ""
-	mark_up[n]$((out[n])) ""
 	eta[n]$((kno_out[n])) ""
+	mark_up[n]$((out[n])) ""
+	mu[n,nn]$((map_all[n,nn])) ""
 ;
 
 $GROUP test_gexo 
