@@ -1,4 +1,4 @@
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 1
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 1
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -38,63 +38,63 @@ C o m p i l a t i o n
   35   
   36  sets
   37          alias_map2
-  38          alias_set
-  39          n
+  38          n
+  39          alias_set
   40  ;
   41   
-  42  alias(n,nnn,nn);
+  42  alias(n,nn,nnn);
   43   
   44  sets
-  45          i_bra_o_s1_out[n]
-  46          i_bra_o_s1_in[n]
-  47          fg[n]
-  48          i_kno_s1_out[n]
-  49          alias_[alias_set,alias_map2]
-  50          int[n]
-  51          i_bra_no_s1_out[n]
-  52          kno_out[n]
-  53          i_bra_no_s1_in[n]
-  54          map_s1_out[n,nn]
-  55          wT[n]
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 2
+  45          kno_inp[n]
+  46          t_out_s1_in[n]
+  47          i_kno_no_s1_in[n]
+  48          i_bra_no_s1_out[n]
+  49          map_s1_out[n,nn]
+  50          fg[n]
+  51          map_s1_in[n,nn]
+  52          map_all[n,nn]
+  53          i_kno_s1_out[n]
+  54          i_bra_o_s1_out[n]
+  55          t_out_s1_out[n]
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 2
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
 
-  56          i_kno_no_s1_in[n]
-  57          inp[n]
+  56          inp[n]
+  57          out[n]
   58          i_kno_s1_in[n]
-  59          kno_inp[n]
-  60          t_out_s1_out[n]
-  61          map_s1_in[n,nn]
-  62          t_out_s1_in[n]
-  63          out[n]
-  64          map_all[n,nn]
+  59          int[n]
+  60          i_bra_o_s1_in[n]
+  61          alias_[alias_set,alias_map2]
+  62          kno_out[n]
+  63          wT[n]
+  64          i_bra_no_s1_in[n]
   65  ;
 GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gdb0.gdx
 --- LOAD  alias_map2 = 2:alias_map2
---- LOAD  alias_set = 1:alias_set
 --- LOAD  n = 3:n
---- LOAD  i_bra_o_s1_in = 21:i_bra_o_s1_in
---- LOAD  i_bra_o_s1_out = 27:i_bra_o_s1_out
---- LOAD  fg = 10:fg
---- LOAD  i_kno_s1_out = 26:i_kno_s1_out
---- LOAD  int = 9:int
---- LOAD  i_bra_no_s1_out = 28:i_bra_no_s1_out
---- LOAD  kno_out = 13:kno_out
---- LOAD  i_bra_no_s1_in = 22:i_bra_no_s1_in
---- LOAD  out = 8:out
---- LOAD  i_kno_no_s1_in = 20:i_kno_no_s1_in
---- LOAD  inp = 7:inp
---- LOAD  i_kno_s1_in = 19:i_kno_s1_in
+--- LOAD  alias_set = 1:alias_set
 --- LOAD  kno_inp = 14:kno_inp
---- LOAD  t_out_s1_out = 25:t_out_s1_out
---- LOAD  t_out_s1_in = 18:t_out_s1_in
+--- LOAD  t_out_s1_in = 16:t_out_s1_in
+--- LOAD  i_kno_no_s1_in = 18:i_kno_no_s1_in
+--- LOAD  i_bra_no_s1_out = 25:i_bra_no_s1_out
+--- LOAD  fg = 10:fg
+--- LOAD  i_kno_s1_out = 23:i_kno_s1_out
+--- LOAD  i_bra_o_s1_out = 24:i_bra_o_s1_out
+--- LOAD  t_out_s1_out = 22:t_out_s1_out
+--- LOAD  inp = 7:inp
+--- LOAD  out = 8:out
+--- LOAD  i_kno_s1_in = 17:i_kno_s1_in
+--- LOAD  int = 9:int
+--- LOAD  i_bra_o_s1_in = 19:i_bra_o_s1_in
+--- LOAD  kno_out = 13:kno_out
 --- LOAD  wT = 11:wT
---- LOAD  map_s1_in = 17:map_s1_in
+--- LOAD  i_bra_no_s1_in = 20:i_bra_no_s1_in
+--- LOAD  map_s1_in = 15:map_s1_in
 --- LOAD  map_all = 12:map_all
+--- LOAD  map_s1_out = 21:map_s1_out
 --- LOAD  alias_ = 6:alias_
---- LOAD  map_s1_out = 24:map_s1_out
   93  ;
   94   
   95  # ----------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_g
  119   
  120   
  121  # ----------------------------------------------test_gexo---------------------------------------------
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 3
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 3
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -164,15 +164,15 @@ C o m p i l a t i o n
  191      parameter load_sigma[n] "";
  192      load_sigma[n]$(((kno_inp[n]))) = 0;
  193   
- 194      parameter load_eta[n] "";
- 195      load_eta[n]$(((kno_out[n]))) = 0;
+ 194      parameter load_mu[n,nn] "";
+ 195      load_mu[n,nn]$(((map_all[n,nn]))) = 0;
  196   
  197      parameter load_mark_up[n] "";
  198      load_mark_up[n]$(((out[n]))) = 0;
  199   
- 200      parameter load_mu[n,nn] "";
- 201      load_mu[n,nn]$(((map_all[n,nn]))) = 0;
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 4
+ 200      parameter load_eta[n] "";
+ 201      load_eta[n]$(((kno_out[n]))) = 0;
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 4
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -182,7 +182,7 @@ C o m p i l a t i o n
  204  # ----------------------------------------------------------------------------------------------------
  205  #  Loop over __load_group
  206  # ----------------------------------------------------------------------------------------------------
- 207   load_sigma=sigma.l  load_eta=eta.l  load_mark_up=mark_up.l  load_mu=mu.l ;
+ 207   load_sigma=sigma.l  load_mu=mu.l  load_mark_up=mark_up.l  load_eta=eta.l ;
  208   
  209  # ----------------------------------------------------------------------------------------------------
  210  #  Loop over __load_group
@@ -190,11 +190,11 @@ C o m p i l a t i o n
  212   
  213      sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
  214   
- 215      eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+ 215      mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
  216   
  217      mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
  218   
- 219      mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+ 219      eta.fx[n]$(((kno_out[n]))) = load_eta[n];
  221  ;
  229   
  230  # ----------------------------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ C o m p i l a t i o n
  261   
  262  # -----------------------------------------------M_s1_in----------------------------------------------
  263  #  Initialize M_s1_in equation block
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 5
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 5
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -288,7 +288,7 @@ C o m p i l a t i o n
  322   
  323  # ----------------------------------------------------------------------------------------------------$UNFIX test_gendo;
  324  # ----------------------------------------------------------------------------------------------------
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 6
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 6
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
@@ -305,7 +305,7 @@ C o m p i l a t i o n
  342   
  343  solve test using CNS;
  344  ;
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 7
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 7
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Include File Summary
 
@@ -316,8 +316,8 @@ Include File Summary
      2       66 GDXIN          1      66  C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gdb0.gdx
 
 
-COMPILATION TIME     =        0.016 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 8
+COMPILATION TIME     =        0.015 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 8
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE test Using CNS From line 343
 
@@ -332,11 +332,11 @@ CODE LENGTH                 157
 SINGLE =E|X= EQUS            12     SINGLE UNFIXED VARS        12
 
 
-GENERATION TIME      =        0.000 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+GENERATION TIME      =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
 
 
-EXECUTION TIME       =        0.000 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/28/20 16:05:32 Page 9
+EXECUTION TIME       =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                               09/30/20 12:58:22 Page 9
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE test Using CNS From line 343
 
@@ -350,7 +350,7 @@ Solution Report     SOLVE test Using CNS From line 343
 **** SOLVER STATUS     1 Normal Completion         
 **** MODEL STATUS      16 Solved                   
 
- RESOURCE USAGE, LIMIT          0.000      1000.000
+ RESOURCE USAGE, LIMIT          0.031      1000.000
  ITERATION COUNT, LIMIT         2    2000000000
  EVALUATION ERRORS              0             0
 
@@ -375,8 +375,8 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
  ** Feasible solution to a square system.
  
  
- CONOPT time Total                            0.000 seconds
-   of which: Function evaluations             0.000 =  0.0%
+ CONOPT time Total                            0.022 seconds
+   of which: Function evaluations             0.002 =  9.1%
              1st Derivative evaluations       0.000 =  0.0%
  
 
@@ -387,7 +387,7 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
 
 
 EXECUTION TIME       =        0.000 SECONDS      2 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              09/28/20 16:05:32 Page 10
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              09/30/20 12:58:22 Page 10
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE test Using CNS From line 343
 

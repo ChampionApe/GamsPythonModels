@@ -45,18 +45,38 @@ class GPM_STA_PE:
 			self.locals = {tree: {attr: nt.trees[tree].__dict__[attr] for attr in nt.trees[tree].__dict__ if attr not in set(['tree','database']).union(nt.prune_trees)} for tree in nt.trees} # trees without database and actual tree
 			self.model = DB2Gams.gams_model_py(nt.database,**kwargs)
 			self.model_instances = {}
+			self.checkpoints = {}
 			self.work_folder = os.getcwd() if 'work_folder' not in kwargs else kwargs['mark_up']
 			for tree in nt.trees.values(): # merge data 
 				DataBase.py_db.merge_dbs(self.model.database,tree.database,exceptions=[eval(f"tree.{attr}") for attr in nt.prune_trees if hasattr(tree,attr)])
-			
+			self.calib = None if 'calib' not in kwargs else kwargs['calib']
+		
+		def calibrate_model(self,repo=os.getcwd(),export_settings=False,base_name = 'baseline',calib_name='calib'):
+			self.df_write(repo=repo,export_settings=export_settings)
+			self.create_model_instance(repo=repo,name=base_name)
+			self.checkpoints[base_name] = self.model_instances[base_name].ws.add_checkpoint()
+			self.checkpoints[calib_name] = self.model_instances[calib_name].ws.add_checkpoint()
+			self.df_run(name=base_name,options_run = {'checkpoint': self.checkpoints[base_name]})
+			calib_job = self.model_instances[baseline].ws.add_job_from_string(self.calib_text(),**{'checkpoint': self.checkpoints[base_name]})
+			calib_job.run(**{'checkpoint': self.checkpoints[calib_name]})
+			return calib_job
+
+		def calib_text(self):
+			return f"""
+			{self.aux_write('qS',l='.fx')}$({self.aux_write('out')}) = {self.aux_write('qS',l='.l')};
+			{self.aux_write('qD',l='.fx')}$({self.aux_write('inp')}) = {self.aux_write('qD',l='.l')};
+			{self.aux_write('mu',l='.lo')}$({self.aux_write('map_all')} and {self.aux_write('inp')}) = -inf;
+			{self.aux_write('mu',l='.up')}$({self.aux_write('map_all')} and {self.aux_write('inp')}) = inf;
+			solve {self.model.settings.name} using CNS;"""
+
 		def create_model_instance(self,repo=None,name='temp'):
 			"""
 			Create model instance with working-folder at repo.
 			"""
 			self.model_instances[name] = DB2Gams.gams_model(self.repo) if repo is None else DB2Gams.gams_model(repo)
 
-		def df_run(self,name='temp'):
-			self.model_instances[name].run(self.model.settings)
+		def df_run(self,name='temp',options_add={},options_run={}):
+			self.model_instances[name].run(self.model.settings,options_add=options_add,options_run=options_run)
 
 		def global_sets(self,nt):
 			"""

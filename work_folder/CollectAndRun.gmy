@@ -35,59 +35,59 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 
 sets
 	alias_map2
-	alias_set
 	n
+	alias_set
 ;
 
-alias(n,nnn,nn);
+alias(n,nn,nnn);
 
 sets
-	i_bra_o_s1_out[n]
-	i_bra_o_s1_in[n]
-	fg[n]
-	i_kno_s1_out[n]
-	alias_[alias_set,alias_map2]
-	int[n]
-	i_bra_no_s1_out[n]
-	kno_out[n]
-	i_bra_no_s1_in[n]
-	map_s1_out[n,nn]
-	wT[n]
-	i_kno_no_s1_in[n]
-	inp[n]
-	i_kno_s1_in[n]
 	kno_inp[n]
-	t_out_s1_out[n]
-	map_s1_in[n,nn]
 	t_out_s1_in[n]
-	out[n]
+	i_kno_no_s1_in[n]
+	i_bra_no_s1_out[n]
+	map_s1_out[n,nn]
+	fg[n]
+	map_s1_in[n,nn]
 	map_all[n,nn]
+	i_kno_s1_out[n]
+	i_bra_o_s1_out[n]
+	t_out_s1_out[n]
+	inp[n]
+	out[n]
+	i_kno_s1_in[n]
+	int[n]
+	i_bra_o_s1_in[n]
+	alias_[alias_set,alias_map2]
+	kno_out[n]
+	wT[n]
+	i_bra_no_s1_in[n]
 ;
 $GDXIN %test%
 $onMulti
 $load alias_map2
-$load alias_set
 $load n
-$load i_bra_o_s1_in
-$load i_bra_o_s1_out
+$load alias_set
+$load kno_inp
+$load t_out_s1_in
+$load i_kno_no_s1_in
+$load i_bra_no_s1_out
 $load fg
 $load i_kno_s1_out
-$load int
-$load i_bra_no_s1_out
-$load kno_out
-$load i_bra_no_s1_in
-$load out
-$load i_kno_no_s1_in
-$load inp
-$load i_kno_s1_in
-$load kno_inp
+$load i_bra_o_s1_out
 $load t_out_s1_out
-$load t_out_s1_in
+$load inp
+$load out
+$load i_kno_s1_in
+$load int
+$load i_bra_o_s1_in
+$load kno_out
 $load wT
+$load i_bra_no_s1_in
 $load map_s1_in
 $load map_all
-$load alias_
 $load map_s1_out
+$load alias_
 $GDXIN
 $offMulti
 ;
@@ -109,12 +109,12 @@ $offMulti
 $offlisting
 VARIABLE sigma[n] "";
 sigma.L[n]$((kno_inp[n])) = 0;
-VARIABLE eta[n] "";
-eta.L[n]$((kno_out[n])) = 0;
-VARIABLE mark_up[n] "";
-mark_up.L[n]$((out[n])) = 0;
 VARIABLE mu[n,nn] "";
 mu.L[n,nn]$((map_all[n,nn])) = 0;
+VARIABLE mark_up[n] "";
+mark_up.L[n]$((out[n])) = 0;
+VARIABLE eta[n] "";
+eta.L[n]$((kno_out[n])) = 0;
 $onlisting
 
 
@@ -191,20 +191,20 @@ $onlisting
     parameter load_sigma[n] "";
     load_sigma[n]$(((kno_inp[n]))) = 0;
   
-    parameter load_eta[n] "";
-    load_eta[n]$(((kno_out[n]))) = 0;
+    parameter load_mu[n,nn] "";
+    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
   
     parameter load_mark_up[n] "";
     load_mark_up[n]$(((out[n]))) = 0;
   
-    parameter load_mu[n,nn] "";
-    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+    parameter load_eta[n] "";
+    load_eta[n]$(((kno_out[n]))) = 0;
   
   execute_load "%test%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
- load_sigma=sigma.l  load_eta=eta.l  load_mark_up=mark_up.l  load_mu=mu.l ;
+ load_sigma=sigma.l  load_mu=mu.l  load_mark_up=mark_up.l  load_eta=eta.l ;
   
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
@@ -212,11 +212,11 @@ $onlisting
 
     sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
   
-    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
   
     mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
   
-    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
 $onlisting
 ;
 $offlisting
@@ -312,9 +312,9 @@ E_pindex_s1_out, E_quant_o_s1_out, E_quant_no_s1_out
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
-eta.FX[n]$((kno_out[n])) = eta.L[n];
-mark_up.FX[n]$((out[n])) = mark_up.L[n];
 mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
+mark_up.FX[n]$((out[n])) = mark_up.L[n];
+eta.FX[n]$((kno_out[n])) = eta.L[n];
 PwT.FX[n]$((inp[n])) = PwT.L[n];
 qS.FX[n]$((out[n])) = qS.L[n];
 $onlisting
