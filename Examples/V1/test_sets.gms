@@ -1,58 +1,58 @@
 sets
-	alias_set
 	n
+	alias_set
 	alias_map2
 ;
 
 alias(n,nn,nnn);
 
 sets
+	int[n]
 	t_out_s1_in[n]
+	i_bra_no_s1_in[n]
 	alias_[alias_set,alias_map2]
-	kno_out[n]
+	t_out_s1_out[n]
+	i_bra_o_s1_in[n]
+	kno_inp[n]
 	i_bra_no_s1_out[n]
+	wT[n]
+	kno_out[n]
+	i_kno_s1_in[n]
+	map_all[n,nn]
+	i_kno_no_s1_in[n]
+	out[n]
+	i_kno_s1_out[n]
+	fg[n]
+	map_s1_in[n,nn]
 	i_bra_o_s1_out[n]
 	inp[n]
 	map_s1_out[n,nn]
-	t_out_s1_out[n]
-	i_kno_s1_in[n]
-	map_s1_in[n,nn]
-	int[n]
-	kno_inp[n]
-	wT[n]
-	i_kno_s1_out[n]
-	out[n]
-	i_bra_o_s1_in[n]
-	fg[n]
-	map_all[n,nn]
-	i_kno_no_s1_in[n]
-	i_bra_no_s1_in[n]
 ;
 
 
 $GDXIN %test%
 $onMulti
-$load alias_set
 $load n
+$load alias_set
 $load alias_map2
-$load t_out_s1_in
-$load kno_out
-$load i_bra_o_s1_out
-$load fg
-$load inp
-$load t_out_s1_out
-$load i_kno_s1_in
 $load int
-$load wT
-$load kno_inp
-$load i_kno_s1_out
-$load out
-$load i_bra_o_s1_in
-$load i_bra_no_s1_out
-$load i_kno_no_s1_in
+$load t_out_s1_in
 $load i_bra_no_s1_in
-$load map_s1_in
+$load t_out_s1_out
+$load i_bra_o_s1_in
+$load kno_inp
+$load i_bra_no_s1_out
+$load wT
+$load kno_out
+$load i_kno_s1_in
+$load i_kno_s1_out
+$load i_kno_no_s1_in
+$load out
+$load fg
+$load i_bra_o_s1_out
+$load inp
 $load map_all
+$load map_s1_in
 $load alias_
 $load map_s1_out
 $GDXIN

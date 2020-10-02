@@ -34,60 +34,60 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 # ----------------------------------------------------------------------------------------------------
 
 sets
+	alias_set
 	alias_map2
 	n
-	alias_set
 ;
 
-alias(n,nn,nnn);
+alias(n,nnn,nn);
 
 sets
-	kno_inp[n]
-	t_out_s1_in[n]
-	i_kno_no_s1_in[n]
-	i_bra_no_s1_out[n]
-	map_s1_out[n,nn]
 	fg[n]
-	map_s1_in[n,nn]
-	map_all[n,nn]
-	i_kno_s1_out[n]
-	i_bra_o_s1_out[n]
+	i_bra_no_s1_out[n]
+	t_out_s1_in[n]
 	t_out_s1_out[n]
-	inp[n]
+	i_kno_no_s1_in[n]
 	out[n]
-	i_kno_s1_in[n]
-	int[n]
-	i_bra_o_s1_in[n]
-	alias_[alias_set,alias_map2]
-	kno_out[n]
 	wT[n]
+	alias_[alias_set,alias_map2]
+	kno_inp[n]
+	i_kno_s1_in[n]
+	i_kno_s1_out[n]
+	int[n]
+	map_all[n,nn]
+	map_s1_in[n,nn]
 	i_bra_no_s1_in[n]
+	kno_out[n]
+	map_s1_out[n,nn]
+	i_bra_o_s1_out[n]
+	inp[n]
+	i_bra_o_s1_in[n]
 ;
 $GDXIN %test%
 $onMulti
+$load alias_set
 $load alias_map2
 $load n
-$load alias_set
-$load kno_inp
-$load t_out_s1_in
-$load i_kno_no_s1_in
-$load i_bra_no_s1_out
 $load fg
-$load i_kno_s1_out
-$load i_bra_o_s1_out
+$load i_bra_no_s1_out
+$load t_out_s1_in
 $load t_out_s1_out
-$load inp
+$load i_kno_no_s1_in
 $load out
-$load i_kno_s1_in
-$load int
-$load i_bra_o_s1_in
-$load kno_out
 $load wT
+$load kno_inp
+$load i_kno_s1_in
+$load i_kno_s1_out
+$load int
 $load i_bra_no_s1_in
-$load map_s1_in
+$load kno_out
+$load i_bra_o_s1_out
+$load inp
+$load i_bra_o_s1_in
 $load map_all
-$load map_s1_out
 $load alias_
+$load map_s1_out
+$load map_s1_in
 $GDXIN
 $offMulti
 ;
@@ -107,14 +107,14 @@ $offMulti
 #  Initialize test_gtech group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
+VARIABLE eta[n] "";
+eta.L[n]$((kno_out[n])) = 0;
+VARIABLE mark_up[n] "";
+mark_up.L[n]$((out[n])) = 0;
 VARIABLE sigma[n] "";
 sigma.L[n]$((kno_inp[n])) = 0;
 VARIABLE mu[n,nn] "";
 mu.L[n,nn]$((map_all[n,nn])) = 0;
-VARIABLE mark_up[n] "";
-mark_up.L[n]$((out[n])) = 0;
-VARIABLE eta[n] "";
-eta.L[n]$((kno_out[n])) = 0;
 $onlisting
 
 
@@ -188,35 +188,35 @@ $onlisting
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
+    parameter load_eta[n] "";
+    load_eta[n]$(((kno_out[n]))) = 0;
+  
+    parameter load_mark_up[n] "";
+    load_mark_up[n]$(((out[n]))) = 0;
+  
     parameter load_sigma[n] "";
     load_sigma[n]$(((kno_inp[n]))) = 0;
   
     parameter load_mu[n,nn] "";
     load_mu[n,nn]$(((map_all[n,nn]))) = 0;
   
-    parameter load_mark_up[n] "";
-    load_mark_up[n]$(((out[n]))) = 0;
-  
-    parameter load_eta[n] "";
-    load_eta[n]$(((kno_out[n]))) = 0;
-  
   execute_load "%test%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
- load_sigma=sigma.l  load_mu=mu.l  load_mark_up=mark_up.l  load_eta=eta.l ;
+ load_eta=eta.l  load_mark_up=mark_up.l  load_sigma=sigma.l  load_mu=mu.l ;
   
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
-  
-    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
+    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
   
     mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
   
-    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+  
+    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
 $onlisting
 ;
 $offlisting
@@ -311,10 +311,10 @@ E_pindex_s1_out, E_quant_o_s1_out, E_quant_no_s1_out
 # ----------------------------------------------------------------------------------------------------$FIX test_gtech, test_gexo;
 # ----------------------------------------------------------------------------------------------------
 $offlisting
+eta.FX[n]$((kno_out[n])) = eta.L[n];
+mark_up.FX[n]$((out[n])) = mark_up.L[n];
 sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
 mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
-mark_up.FX[n]$((out[n])) = mark_up.L[n];
-eta.FX[n]$((kno_out[n])) = eta.L[n];
 PwT.FX[n]$((inp[n])) = PwT.L[n];
 qS.FX[n]$((out[n])) = qS.L[n];
 $onlisting

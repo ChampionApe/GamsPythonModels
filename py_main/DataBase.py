@@ -185,6 +185,7 @@ class db_pd:
 	def __len__(self):
 		return len(self.database)
 
+
 class py_db:
 	"""
 	Database that encompasses two types of databases: 
@@ -426,14 +427,14 @@ class py_db:
 		else:
 			db.create_set(name,index,explanatory_text,texts,domains)
 
-	def merge_internal(self,priority='first'):
+	def merge_internal(self,priority='second',exceptions=[],save_series_to_database=True):
 		"""
 		Merge db_default into db_other.
 		"""
-		py_db.merge_dbs(self.db_other,self,priority)
+		py_db.merge_dbs(self.db_other,self,priority=priority,exceptions=exceptions,save_series_to_database=save_series_to_database)
 
 	@staticmethod
-	def merge_dbs(db1,db2,priority='first',exceptions=[]):
+	def merge_dbs(db1,db2,priority='first',exceptions=[],save_series_to_database=True):
 		"""
 		Merge db2 into db1, with the priority 'first','second' or 'replace'. 
 			- 	'first' implies that combining symbols in db1 and db2,
@@ -445,7 +446,11 @@ class py_db:
 			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2.sets['sets'] if name not in exceptions]; # Fundamental sets
 			if 'alias_' in db2:
 				[py_db.add_or_merge(db1,py_db.create_alias(db2,name,alias),alias,priority) for name in db2.alias_all for alias in db2.alias_all[name]]; # alias'
+			if save_series_to_database is True:
+				db1.save_series_to_database()
 			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2 if name not in db2.sets['sets'] and name not in exceptions]; # other symbols
+			if save_series_to_database is True:
+				db1.save_series_to_database()
 		else:
 			[py_db.add_or_merge(db1,db2[name],name,priority) for name in db2 if name not in exceptions];
 			if 'alias_' in db2:

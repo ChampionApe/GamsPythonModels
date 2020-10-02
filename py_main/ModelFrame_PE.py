@@ -49,19 +49,33 @@ class GPM_STA_PE:
 			self.work_folder = os.getcwd() if 'work_folder' not in kwargs else kwargs['mark_up']
 			for tree in nt.trees.values(): # merge data 
 				DataBase.py_db.merge_dbs(self.model.database,tree.database,exceptions=[eval(f"tree.{attr}") for attr in nt.prune_trees if hasattr(tree,attr)])
-			self.calib = None if 'calib' not in kwargs else kwargs['calib']
-		
-		def calibrate_model(self,repo=os.getcwd(),export_settings=False,base_name = 'baseline',calib_name='calib'):
-			self.df_write(repo=repo,export_settings=export_settings)
-			self.create_model_instance(repo=repo,name=base_name)
-			self.checkpoints[base_name] = self.model_instances[base_name].ws.add_checkpoint()
-			self.checkpoints[calib_name] = self.model_instances[calib_name].ws.add_checkpoint()
-			self.df_run(name=base_name,options_run = {'checkpoint': self.checkpoints[base_name]})
-			calib_job = self.model_instances[baseline].ws.add_job_from_string(self.calib_text(),**{'checkpoint': self.checkpoints[base_name]})
-			calib_job.run(**{'checkpoint': self.checkpoints[calib_name]})
-			return calib_job
+			self.calib_db = None if 'calib_db' not in kwargs else kwargs['calib_db']
+
+		def calibrate_model(self,name='temp',repo_work=os.getcwd(),repo_save = os.getcwd(),export_settings=False,calib_db=None,add_calib_db=True,options_add={},options_run={},add_checkpoint=False):
+			"""
+			Does the following: (1) Add calibration data (if add_calib_db=True and calib_db is not None).
+								(2) Merge calibration data into model.database with priority (thus, if data overlaps, the calibration data is used).
+								(3) 
+			"""
+			if calib_db is None:
+				db = self.calib_db
+			else:
+				db = calib_db
+				self.calib_db = calib_db if add_calib_db is True else self.calib_db
+			self.df_init()
+			DataBase.py_db.merge_dbs(self.model.database,db,priority='second')
+			self.df_write(repo=repo_save,export_settings=export_settings)
+			self.create_model_instance(repo=repo_work,name=name)
+			solve_prior = self.model.settings.solve
+			self.model.settings.solve = self.calib_text()
+			self.df_run(name=name,options_add=options_add,options_run=options_run,add_checkpoint=add_checkpoint)
+			self.model.settings.solve = solve_prior
 
 		def calib_text(self):
+			"""
+			Add this for a multiple-output model:
+			# {self.aux_write('PbT',l='.fx')}$({self.aux_write('out')}) = {self.aux_write('PbT',l='.l')};
+			"""
 			return f"""
 			{self.aux_write('qS',l='.fx')}$({self.aux_write('out')}) = {self.aux_write('qS',l='.l')};
 			{self.aux_write('qD',l='.fx')}$({self.aux_write('inp')}) = {self.aux_write('qD',l='.l')};
@@ -75,8 +89,11 @@ class GPM_STA_PE:
 			"""
 			self.model_instances[name] = DB2Gams.gams_model(self.repo) if repo is None else DB2Gams.gams_model(repo)
 
-		def df_run(self,name='temp',options_add={},options_run={}):
-			self.model_instances[name].run(self.model.settings,options_add=options_add,options_run=options_run)
+		def df_run(self,name='temp',options_add={},options_run={},add_checkpoint=False):
+			if add_checkpoint is not False:
+				self.checkpoints[add_checkpoint] = self.model_instances[name].ws.add_checkpoint()
+				options_run = {**options_run,**{'checkpoint': self.checkpoints[add_checkpoint]}}
+			self.model_instances[name].run(model=self.model.settings,options_add=options_add,options_run=options_run)
 
 		def global_sets(self,nt):
 			"""

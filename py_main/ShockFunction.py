@@ -1,9 +1,7 @@
-import os
+import os, pandas as pd, numpy as np, DataBase
 from gams import *
-from DB2Gams import *
-import DataBase
 from dreamtools.gamY import Precompiler
-import pandas as pd
+from DB2Gams_l2 import gams_model_py
 
 def IfInt(x):
 	try:
@@ -21,6 +19,22 @@ def return_version(x,dict_):
 		maxInt = max([int(y.split('_')[1]) for y in dict_ if (y.split('_')[0]==x and IfInt(y.split('_')[1]))])
 		return x+'_'+str(maxInt+1)
 
+def append_index_with_1dindex(index1,index2):
+	"""
+	index1 is a pandas index/multiindex. index 2 is a pandas index (not multiindex).
+	Returns a pandas multiindex with the cartesian product of elements in (index1,index2). 
+	NB: If index1 is a sparse multiindex, the cartesian product of (index1,index2) will keep this structure.
+	"""
+	return pd.MultiIndex.from_tuples([a+(b,) for a in index1 for b in index2],names=index1.names+index2.names) if isinstance(index1,pd.MultiIndex) else pd.MultiIndex.from_tuples([(a,b) for a in index1 for b in index2],names=index1.names+index2.names)
+
+def add_linspace_to_series(vals_init,vals_end,linspace_index,name):
+	"""
+	vals_init and vals_end are pandas series defined over a common index.
+	linspace_index is a pandas index of the relevant length of the desired linspace.
+	The function returns a pandas series with a linearly spaced grid added to each element i in vals_init/vals_end.
+	"""
+	return pd.concat([pd.Series(np.linspace(vals_init.values[i],vals_end.values[i],num=len(linspace_index)),index = append_index_with_1dindex(vals_init.index[vals_init.index==vals_init.index[i]],linspace_index),name=name) for i in range(len(vals_init))])
+
 def end_w_y(x,y):
 	if x.endswith(y):
 		return x
@@ -32,6 +46,18 @@ def end_w_gms(x):
 	return end_w_y(x,'.gms')
 def end_w_gmy(x):
 	return end_w_y(x,'.gmy')
+
+def solve_sneaky_db(db0,db_star,update_vars,shock_name,n_steps,loop_name):
+    shock_db = DataBase.py_db(name=shock_name)
+    shock_db[loop_name] = loop_name+'_'+pd.Index(range(1,n_steps+1),name=loop_name).astype(str)
+    for var in update_vars:
+    	symbol = db_star[var][((db0[var][db0[var].index.isin(db_star[var].index)]-db_star[var])!=0)]
+    	shock_db[var+'_subset'] = symbol.index
+    	shock_db[var+'_loopval'] = add_linspace_to_series(db0[var][db0[var].index.isin(shock_db[var+'_subset'])], symbol, shock_db[loop_name], var+'_loopval')
+    	shock_db[var+'_loopval'].attrs['type']='parameter'
+    shock_db.upd_sets_from_vars()
+    shock_db.merge_internal()
+    return shock_db
 
 class AddShocks:
 	"""
@@ -78,9 +104,9 @@ class AddShocks:
 		"""
 		Write the loop text using the database with loop information + text from 'loop_text'.
 		"""
-		self.write_components['loop'] = """loop( ({sets})$({cond}), {loop})
+		self.write_components['loop'] = """loop( ({sets}){cond}, {loop})
 		""".format( sets = ', '.join(self.shock_gm.database[self.loop_name].names),
-					cond = self.shock_gm.database.get(self.loop_name).to_str,
+					cond = '$('+self.shock_gm.database.get(self.loop_name).to_str+')' if self.shock_gm.database.get(self.loop_name).to_str!=self.loop_name else '',
 					loop = self.loop_text)
 		return self.write_components['loop']
 
@@ -93,7 +119,7 @@ class AddShocks:
 			(3) Store solution in database.
 		"""
 		self.model = model
-		self.name = self.model.model.name
+		self.name = self.model.settings.name
 		self.UEVAS = {'sol': {}, 'adj': {}}
 
 	@property 
@@ -101,7 +127,8 @@ class AddShocks:
 		self.write_components = {}
 		self.write_sets()
 		self.write_pars()
-		self.UEVAS_WritePGroup()
+		if len(self.UEVAS['sol'])>0:
+			self.UEVAS_WritePGroup()
 		self.loop_text = self.UEVAS_UpdateExoVars()+self.WriteResolve()+self.UEVAS_WriteStoreSol()
 		self.write_loop_text()
 		return self.text

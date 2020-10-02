@@ -1,0 +1,105 @@
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/02/20 14:43:06 Page 11
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 345  sets
+ 346          l1
+ 347          n
+ 348  ;
+ 349   
+ 350   
+ 351  sets
+ 352          PwT_subset[n]
+ 353          qS_subset[n]
+ 354          qD_subset[n]
+ 355          PbT_subset[n]
+ 356  ;
+ 357   
+ 358   
+GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
+--- LOAD  l1 = 1:l1
+--- MERGE n = 2:n
+--- LOAD  PwT_subset = 5:PwT_subset
+--- LOAD  qS_subset = 9:qS_subset
+--- LOAD  qD_subset = 7:qD_subset
+--- LOAD  PbT_subset = 3:PbT_subset
+ 369   parameters
+ 370          qS_loopval[n,l1]
+ 371          PbT_loopval[n,l1]
+ 372          PwT_loopval[n,l1]
+ 373          qD_loopval[n,l1]
+ 374  ;
+ 375   
+GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
+--- LOAD  qS_loopval = 10:qS_loopval
+--- LOAD  PbT_loopval = 4:PbT_loopval
+--- LOAD  PwT_loopval = 6:PwT_loopval
+--- LOAD  qD_loopval = 8:qD_loopval
+ 383   loop( (l1),    PbT.fx[n]$(PbT_subset[n]) = PbT_loopval[n,l1];
+ 384          PwT.fx[n]$(PwT_subset[n]) = PwT_loopval[n,l1];
+ 385          qD.fx[n]$(qD_subset[n]) = qD_loopval[n,l1];
+ 386          qS.fx[n]$(qS_subset[n]) = qS_loopval[n,l1];
+ 387   
+ 388   
+ 389  solve test using CNS;
+ 390   
+ 391  )
+ 392   
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/02/20 14:43:06 Page 12
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gms
+     2      359 GDXIN          1      15  C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
+     3      376 GDXIN          1      32  C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/02/20 14:43:06 Page 13
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Analysis      SOLVE test Using CNS From line 389
+
+
+**** ERROR: CNS models must be square
+This model contains 12 equality rows and 6 unfixed columns
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/02/20 14:43:06 Page 14
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE test Using CNS From line 389
+
+
+LOOPS                                   l1   l1_1
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           9     SINGLE EQUATIONS           12
+BLOCKS OF VARIABLES           7     SINGLE VARIABLES           30
+NON ZERO ELEMENTS            72     NON LINEAR N-Z             60
+DERIVATIVE POOL              20     CONSTANT POOL              16
+CODE LENGTH                 157
+SINGLE =E|X= EQUS            12     SINGLE UNFIXED VARS         6
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+
+**** SOLVE from line 389 ABORTED, EXECERROR = 1
+
+
+EXECUTION TIME       =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+
+
+USER: Medium MUD - 10 User License                   G200108/0001CA-WIN
+      DREAM, Danish Rational Economic Agents Model                DC620
+
+
+**** FILE SUMMARY
+
+Restart    C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gcp0.g00
+Input      C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gms
+Output     C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\_gams_py_gjo1.lst
+
+**** USER ERROR(S) ENCOUNTERED

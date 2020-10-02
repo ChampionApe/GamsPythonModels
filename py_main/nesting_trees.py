@@ -27,6 +27,7 @@ class nt:
 			self.type_f = 'CET' # set default type to cet
 		self.database = DataBase.py_db(name=self.name,alias=pd.MultiIndex.from_tuples([(self.setname,self.alias), (self.setname, self.alias2)]))
 
+
 	def apply_namespace(self):
 		if self.temp_namespace is not None:
 			return DataBase_wheels.small_updates.set_values(self.database,self.setname,self.temp_namespace)
