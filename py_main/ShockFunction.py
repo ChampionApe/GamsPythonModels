@@ -47,15 +47,17 @@ def end_w_gms(x):
 def end_w_gmy(x):
 	return end_w_y(x,'.gmy')
 
-def solve_sneaky_db(db0,db_star,update_vars,shock_name,n_steps,loop_name):
+def solve_sneaky_db(db0,db_star,shock_name,n_steps,loop_name,update_vars='all',clean_up=True):
     shock_db = DataBase.py_db(name=shock_name)
     shock_db[loop_name] = loop_name+'_'+pd.Index(range(1,n_steps+1),name=loop_name).astype(str)
+    if update_vars=='all':
+    	update_vars = [var for var in db0.variables['variables'] if var in db_star.variables['variables']]
     for var in update_vars:
-    	symbol = db_star[var][((db0[var][db0[var].index.isin(db_star[var].index)]-db_star[var])!=0)]
+    	symbol = db_star[var][((db0[var][db0[var].index.isin(db_star[var].index)]-db_star[var])!=0)] if clean_up is True else db_star[var]
     	shock_db[var+'_subset'] = symbol.index
     	shock_db[var+'_loopval'] = add_linspace_to_series(db0[var][db0[var].index.isin(shock_db[var+'_subset'])], symbol, shock_db[loop_name], var+'_loopval')
     	shock_db[var+'_loopval'].attrs['type']='parameter'
-    shock_db.upd_sets_from_vars()
+    shock_db.upd_all_sets()
     shock_db.merge_internal()
     return shock_db
 

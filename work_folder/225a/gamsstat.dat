@@ -1,0 +1,62 @@
+=C
+=CCONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
+=0CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
+=1
+ 
+ 
+    C O N O P T   version 4.15
+    Copyright (C) ARKI Consulting and Development A/S
+                  Bagsvaerdvej 246 A
+                  DK-2880 Bagsvaerd, Denmark
+    Licensed to:  GAMS/CONOPT OEM License
+ 
+=2
+ 
+  ***  Line    0  SET       LFEERR =            0
+ 
+  ***  Line    0  SET       LFITER =   2000000000
+ 
+  ***  Line    0  SET       RVTIME =      1000.000000
+=1
+ 
+    The user model has 12 constraints and 30 variables
+    with 72 Jacobian elements, 60 of which are nonlinear.
+=2
+ 
+    Iter Phase   Ninf   Infeasibility   RGmax      NSB   Step  InItr MX OK
+       0   0          5.1148463953E-01 (Input point)
+=1
+ 
+    The pre-triangular part of the model has 0 constraints and 18 variables.
+=2
+=1
+ 
+    Preprocessed model has 12 constraints and 12 variables
+    with 38 Jacobian elements, 32 of which are nonlinear.
+=2
+                      5.1148463953E-01 (Full preprocessed model)
+                      1.7849296066E-03 (After scaling)
+ 
+    Iter Phase   Ninf   Infeasibility   RGmax      NSB   Step  InItr MX OK
+ 
+Search for a first feasible solution
+ 
+ 
+    Iter Phase   Ninf   Infeasibility   RGmax      NSB   Step  InItr MX OK
+       1   1       0  2.1344689072E-09                 1.0E+00     2 F  T
+=1
+ 
+ ** Feasible solution to a square system.
+ 
+=2
+=1
+ 
+ CONOPT time Total                            0.003 seconds
+   of which: Function evaluations             0.000 =  0.0%
+             1st Derivative evaluations       0.000 =  0.0%
+ 
+=2
+ 
+ Memory: Max used =      0.04 Mbytes
+  Total Allocated =      0.05 Mbytes
+ 

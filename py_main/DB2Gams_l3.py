@@ -7,7 +7,7 @@ class gams_model:
 	work_folder: Point to folder where the model should be run from. 
 	opt_file: Add options file. If None, a default options file is written (see default_opt).
 	"""
-	def __init__(self,work_folder,opt_file=None,execute_name='CollectAndRun.gms'):
+	def __init__(self,work_folder,opt_file=None,execute_name='CollectAndRun.gms',settings=None):
 		self.work_folder = work_folder
 		self.execute_name = execute_name
 		self.dbs = {}
@@ -16,6 +16,7 @@ class gams_model:
 			self.opt = default_opt(self.ws,name='temp.opt')
 		else:
 			self.opt = self.ws.add_options(opt_file=opt_file)
+		self.settings = settings
 
 	def upd_databases(self,merge_internal=True,from_gdx=False):
 		"""
@@ -41,27 +42,34 @@ class gams_model:
 		self.run_job(options_run)
 		self.out_db = DataBase.py_db(database_gdx=self.job.out_db,default_db='db_Gdx')
 
-	def solve_sneaky(self,db_star,n_steps,update_vars='All',shock_name='shock',loop_name='l1',model=None,run_from_job=False,options_add={},options_run={},cp=None):
-		"""
-		solve_sneaky adjusts a number of exogenous values gradually towards a new level. More specifically:
-			(1) Add a checkpoint if one is not passed. (2) run baseline model with checkpoint. (3) Create database with parameters to loop through (shock_db). 
-			(4) Export shock-database to working_folder. (5) Create shock-instance and settings for it. 
-		"""
-		if cp is None:
-			cp = self.ws.add_checkpoint()
-		self.run(model=model,run_from_job=run_from_job,options_add=options_add,options_run={**options_run,**{'checkpoint': cp}})
-		if update_vars == 'All':
-			update_vars = db_star.variables['variables']
-		shock_db = ShockFunction.solve_sneaky_db(self.out_db,db_star,update_vars,shock_name,n_steps,loop_name)
+	def solve_sneakily(self,db_star=None,from_cp=False,cp_init=None,run_from_job=False,shock_db=None,update_vars='all',shock_name='shock',n_steps=10,loop_name='l1',options_run={},**kwargs):
+		if from_cp is False:
+			cp = self.ws.add_checkpoint() if cp_init is None else cp_init
+			self.run(model=self.settings,run_from_job=run_from_job,**{'checkpoint': cp})
+		if shock_db is None:
+			shock_db = ShockFunction.solve_sneaky_db(self.out_db,db_star,shock_name,nsteps,loop_name,update_vars=update_vars)
 		shock_db.db_other.export(self.work_folder+'\\'+shock_db.name+'.gdx')
-		shock = ShockFunction.AddShocks(self.settings.name,shock_db,loop_name)
+		shock = self.std_UEVAS_from_db(shock_db,loop_name,update_vars=update_vars,shock_name=shock_name)
+		self.execute_shock_from_cp(shock,shock_db.name,cp_init,options_run=options_run)
+
+	def std_UEVAS_from_db(self,shock_db,loop_name,update_vars='all',shock_name=None):
+		"""
+		Creates a ShockFunction that loops over values in shock_db, for variables in update_vars.
+		The shock_db needs to be arranged with variable names as var+'_loopval', and subsets var+'_subset' for the method to work.
+		"""
+		shock = ShockFunction.AddShocks('shock_'+self.settings.name if shock_name is None else shock_name,shock_db,loop_name)
 		shock.UpdateExoVarsAndSolve(self)
+		if update_vars=='all':
+			update_vars = [par.split('_loopval')[0] for par in shock_db.parameters['parameters']]
 		for var in update_vars:
 			shock.UEVAS_adjVar(var,var+'_loopval',conditions=shock_db.get(var+'_subset').to_str)
-		self.opt.defines[shock_name] = shock_db.name+'.gdx'
-		shock.UEVAS_2gmy(self.work_folder+'\\'+shock.shock_gm.database.name)
-		self.job = self.ws.add_job_from_file(shock.gms,cp)
-		self.run(run_from_job=True)
+		shock.UEVAS_2gmy(self.work_folder+'\\'+shock.name)
+		return shock
+
+	def execute_shock_from_cp(self,shock,shock_db_name,cp,options_run={}):
+		self.opt.defines[shock_db_name] = shock_db_name+'.gdx'
+		self.job = self.ws.add_job_from_file(shock.gms,**{'checkpoint': cp})
+		self.run(run_from_job=True,options_run=options_run)
 
 	def model_instance(self,gams_settings):
 		"""

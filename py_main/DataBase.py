@@ -583,6 +583,11 @@ class py_db:
 	###								4.1: UPDATE DOMAINS FROM OTHER SYMBOLS	 						###
 	###################################################################################################
 
+	def upd_all_sets(self,db=None,clean_up=True,include_mappings=False,exemptions=[]):
+		self.upd_sets_from_vars(db=db,clean_up=True,include_mappings=include_mappings,exemptions=exemptions)
+		self.upd_ssets_from_sets()
+		self.update_maps_from_sets()
+
 	def upd_sets_from_vars(self,db=None,clean_up=True,include_mappings=False,exemptions=[]):
 		"""
 		Only keep elements in 'sets', if they are used in variables, parameters or mappings (optional). 
