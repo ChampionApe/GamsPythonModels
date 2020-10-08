@@ -76,7 +76,7 @@ class GPM_STA_PE:
 			self.calib_db = None if 'calib_db' not in kwargs else kwargs['calib_db']
 
 
-		def calibrate(self,name_base='baseline',name_calib='calib',solve_sneakily=True,kwargs_ns={},kwargs_shock={}):
+		def calibrate(self,name_base='baseline',name_calib='calib',solve_sneakily=True,type_='both',kwargs_ns={},kwargs_shock={}):
 			"""
 			Add subsets for calibration
 			"""
@@ -89,38 +89,39 @@ class GPM_STA_PE:
 			self.model_instances[name_calib].job = self.model_instances[name_calib].ws.add_job_from_string(self.calib_text(), **{'checkpoint': self.checkpoints[name_base]})
 			self.model_instances[name_calib].run(run_from_job=True, options_run = {'checkpoint': self.checkpoints[name_calib]})
 			if solve_sneakily is True:
-				shock_db = self.calib_sneaky_db(self.model_instances[name_calib].out_db,**kwargs_shock)
-				self.model_instances[name_calib].solve_sneakily(from_cp=True,cp_init=self.checkpoints[name_calib],shock_db=shock_db,**kwargs_shock)
+				shock_db = self.calib_sneaky_db(self.model_instances[name_calib].out_db,type_=type_,kwargs_shock=kwargs_shock)
+				self.model_instances[name_calib].solve_sneakily(from_cp=True,cp_init=self.checkpoints[name_calib],shock_db=shock_db,kwargs_shock=kwargs_shock)
 
 		def run_baseline(self,name='baseline',add_checkpoint=False):
 			self.df_write(repo=self.data_folder)
 			self.create_model_instance(name=name)
 			self.df_run(name=name,add_checkpoint=add_checkpoint)
 
-		def calib_sneaky_db(self,baseline_db,n_steps=10,loop_name='l1',shock_name='shock',type_='both'):
+		def calib_sneaky_db(self,baseline_db,type_='both',kwargs_shock={}):
 			"""
 			Create a database with linearly-spaced grids of exogenous variables in the baseline solution (baseline_db),
 			and some target database (self.calib_db). This db is used to loop-over to sneak up on the solution.
 			"""
-			shock_db = ShockFunction.solve_sneaky_db(baseline_db,self.calib_db,shock_name,n_steps,loop_name,clean_up=False)
-			TC = (shock_db[self.globals['vars']['qD']+'_loopval']*shock_db[self.globals['vars']['PwT']+'_loopval']).groupby(loop_name).sum() 
+			kwargs_shock['clean_up'],kwargs_shock['return_dict'] = False,True
+			shock_db,kwargs_shock = ShockFunction.solve_sneaky_db(baseline_db,self.calib_db,**kwargs_shock)
+			TC = (shock_db[self.globals['vars']['qD']+'_loopval']*shock_db[self.globals['vars']['PwT']+'_loopval']).groupby(kwargs_shock['loop_name']).sum() 
 			PbT,qS = shock_db[self.globals['vars']['PbT']+'_loopval'],shock_db[self.globals['vars']['qS']+'_loopval']
-			p0,pT = PbT.xs(shock_db[loop_name][0],level=loop_name),PbT.xs(shock_db[loop_name][-1],level=loop_name)
-			q0,qT = qS.xs(shock_db[loop_name][0],level=loop_name),qS.xs(shock_db[loop_name][-1],level=loop_name)
-			Delta = balanced_loop(PbT,qS,shock_db[loop_name],TC,type_=type_)
+			p0,pT = PbT.xs(shock_db[kwargs_shock['loop_name']][0],level=kwargs_shock['loop_name']),PbT.xs(shock_db[kwargs_shock['loop_name']][-1],level=kwargs_shock['loop_name'])
+			q0,qT = qS.xs(shock_db[kwargs_shock['loop_name']][0],level=kwargs_shock['loop_name']),qS.xs(shock_db[kwargs_shock['loop_name']][-1],level=kwargs_shock['loop_name'])
+			Delta = balanced_loop(PbT,qS,shock_db[kwargs_shock['loop_name']],TC,type_=type_)
 			var = self.globals['vars']['PbT']+'_loopval'
 			if type_!='price':
-				shock_db[var] = ( (Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[loop_name][-1],level=loop_name)+
-								(1-Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[loop_name][0],level=loop_name) )
+				shock_db[var] = ( (Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[kwargs_shock['loop_name']][-1],level=kwargs_shock['loop_name'])+
+								(1-Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[kwargs_shock['loop_name']][0],level=kwargs_shock['loop_name']) )
 				shock_db[var].attrs['type'] = 'parameter'
 			var = self.globals['vars']['qS']+'_loopval'
 			if type_!='quant':
-				shock_db[var] = ( (Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[loop_name][-1],level=loop_name)+
-								(1-Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[loop_name][0],level=loop_name) )
+				shock_db[var] = ( (Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[kwargs_shock['loop_name']][-1],level=kwargs_shock['loop_name'])+
+								(1-Delta * pd.Series(1, index=shock_db[var].index)) * shock_db[var].xs(shock_db[kwargs_shock['loop_name']][0],level=kwargs_shock['loop_name']) )
 				shock_db[var].attrs['type'] = 'parameter'
 			var,subset = self.globals['vars']['PbT']+'_loopval',self.globals['vars']['PbT']+'_subset'
 			shock_db[var] = shock_db[var][~shock_db[var].index.get_level_values(self.globals['sets']['n']).isin(baseline_db[self.globals['sets']['endo_PbT']])]
-			shock_db[subset] = shock_db[var].index.droplevel(loop_name).unique()
+			shock_db[subset] = shock_db[var].index.droplevel(kwargs_shock['loop_name']).unique()
 			shock_db.merge_internal(priority='replace')
 			return shock_db
 

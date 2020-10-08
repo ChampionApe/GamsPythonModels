@@ -27,13 +27,32 @@ def append_index_with_1dindex(index1,index2):
 	"""
 	return pd.MultiIndex.from_tuples([a+(b,) for a in index1 for b in index2],names=index1.names+index2.names) if isinstance(index1,pd.MultiIndex) else pd.MultiIndex.from_tuples([(a,b) for a in index1 for b in index2],names=index1.names+index2.names)
 
-def add_linspace_to_series(vals_init,vals_end,linspace_index,name):
+def add_grid_to_series(vals_init,vals_end,linspace_index,name,gridtype='linear',phi=1):
 	"""
 	vals_init and vals_end are pandas series defined over a common index.
 	linspace_index is a pandas index of the relevant length of the desired linspace.
-	The function returns a pandas series with a linearly spaced grid added to each element i in vals_init/vals_end.
+	The function returns a pandas series with a gridtype-spaced grid added to each element i in vals_init/vals_end.
 	"""
+	if gridtype=='linear':
+		apply_grid = lambda x0,xN,N: np.linspace(x0,xN,num=N)
+	elif gridtype=='rust':
+		apply_grid = lambda x0,xN,N: rust_space(x0,xN,N,phi)
+	elif gridtype=='pol':
+		apply_grid = lambda x0,xN,N: pol_space(x0,xN,N,phi)
+	return pd.concat([pd.Series(apply_grid(vals_init.values[i],vals_end.values[i],len(linspace_index)), index = append_index_with_1dindex(vals_init.index[vals_init.index==vals_init.index[i]],linspace_index),name=name) for i in range(len(vals_init))])
+
+def add_linspace_to_series(vals_init,vals_end,linspace_index,name):
 	return pd.concat([pd.Series(np.linspace(vals_init.values[i],vals_end.values[i],num=len(linspace_index)),index = append_index_with_1dindex(vals_init.index[vals_init.index==vals_init.index[i]],linspace_index),name=name) for i in range(len(vals_init))])
+
+def rust_space(x0,xN,N,phi):
+	x = np.empty(N)
+	x[0] = x0
+	for i in range(2,N+1):
+		x[i-1] = x[i-2]+(xN-x[i-2])/((N-i+1)**phi)
+	return x
+
+def pol_space(x0,xN,N,phi):
+	return np.array([x0+(xN-x0)*((i-1)/(N-1))**phi for i in range(1,N+1)])
 
 def end_w_y(x,y):
 	if x.endswith(y):
@@ -47,7 +66,7 @@ def end_w_gms(x):
 def end_w_gmy(x):
 	return end_w_y(x,'.gmy')
 
-def solve_sneaky_db(db0,db_star,shock_name,n_steps,loop_name,update_vars='all',clean_up=True):
+def solve_sneaky_db(db0,db_star,shock_name='shock',n_steps=10,loop_name='l1',update_vars='all',clean_up=True,gridtype='linear',phi=1,return_dict=False):
     shock_db = DataBase.py_db(name=shock_name)
     shock_db[loop_name] = loop_name+'_'+pd.Index(range(1,n_steps+1),name=loop_name).astype(str)
     if update_vars=='all':
@@ -55,11 +74,11 @@ def solve_sneaky_db(db0,db_star,shock_name,n_steps,loop_name,update_vars='all',c
     for var in update_vars:
     	symbol = db_star[var][((db0[var][db0[var].index.isin(db_star[var].index)]-db_star[var])!=0)] if clean_up is True else db_star[var]
     	shock_db[var+'_subset'] = symbol.index
-    	shock_db[var+'_loopval'] = add_linspace_to_series(db0[var][db0[var].index.isin(shock_db[var+'_subset'])], symbol, shock_db[loop_name], var+'_loopval')
+    	shock_db[var+'_loopval'] = add_grid_to_series(db0[var][db0[var].index.isin(shock_db[var+'_subset'])], symbol, shock_db[loop_name], var+'_loopval',gridtype=gridtype,phi=phi)
     	shock_db[var+'_loopval'].attrs['type']='parameter'
     shock_db.upd_all_sets()
     shock_db.merge_internal()
-    return shock_db
+    return shock_db if return_dict is False else shock_db,{'shock_name': shock_name, 'n_steps': n_steps, 'loop_name': loop_name, 'update_vars': update_vars, 'clean_up': clean_up, 'gridtype': gridtype, 'phi': phi}
 
 class AddShocks:
 	"""

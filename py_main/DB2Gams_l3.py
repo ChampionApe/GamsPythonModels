@@ -42,17 +42,17 @@ class gams_model:
 		self.run_job(options_run)
 		self.out_db = DataBase.py_db(database_gdx=self.job.out_db,default_db='db_Gdx')
 
-	def solve_sneakily(self,db_star=None,from_cp=False,cp_init=None,run_from_job=False,shock_db=None,update_vars='all',shock_name='shock',n_steps=10,loop_name='l1',options_run={},**kwargs):
+	def solve_sneakily(self,db_star=None,from_cp=False,cp_init=None,run_from_job=False,shock_db=None,options_run={},kwargs_shock={}):
 		if from_cp is False:
 			cp = self.ws.add_checkpoint() if cp_init is None else cp_init
 			self.run(model=self.settings,run_from_job=run_from_job,**{'checkpoint': cp})
 		if shock_db is None:
-			shock_db = ShockFunction.solve_sneaky_db(self.out_db,db_star,shock_name,nsteps,loop_name,update_vars=update_vars)
+			shock_db = ShockFunction.solve_sneaky_db(self.out_db,db_star,**kwargs_shock)
 		shock_db.db_other.export(self.work_folder+'\\'+shock_db.name+'.gdx')
-		shock = self.std_UEVAS_from_db(shock_db,loop_name,update_vars=update_vars,shock_name=shock_name)
+		shock = self.std_UEVAS_from_db(shock_db,**kwargs_shock)
 		self.execute_shock_from_cp(shock,shock_db.name,cp_init,options_run=options_run)
 
-	def std_UEVAS_from_db(self,shock_db,loop_name,update_vars='all',shock_name=None):
+	def std_UEVAS_from_db(self,shock_db,loop_name='l1',update_vars='all',shock_name='shock',**kwargs):
 		"""
 		Creates a ShockFunction that loops over values in shock_db, for variables in update_vars.
 		The shock_db needs to be arranged with variable names as var+'_loopval', and subsets var+'_subset' for the method to work.
