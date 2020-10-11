@@ -1,24 +1,25 @@
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/08/20 09:38:25 Page 11
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 11
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
 
- 349   
- 350                          qS.fx[n]$(out[n]) = qS.l[n];
- 351                          qD.fx[n]$(inp[n]) = qD.l[n];
- 352                          mu.lo[n,nn]$(map_all[n,nn] and (inp[n] or out[n])) = 0;
- 353                          mu.up[n,nn]$(map_all[n,nn] and (inp[n] or out[n])) = inf;
- 354                          PbT.fx[n]$(out[n]) = PbT.l[n];
- 355                          mu.fx[n,nn]$(exo_mu[n,nn]) = mu.l[n,nn];
- 356                          PbT.lo[n]$(endo_PbT[n]) = -inf;
- 357                          PbT.up[n]$(endo_PbT[n]) = inf;
- 358                          solve test using CNS;
+ 348   
+ 349                          qS.fx[n]$(out[n]) = qS.l[n];
+ 350                          qD.fx[n]$(inp[n]) = qD.l[n];
+ 351                          mu.lo[n,nn]$(map_all[n,nn] and (inp[n] or out[n])) = 0;
+ 352                          mu.up[n,nn]$(map_all[n,nn] and (inp[n] or out[n])) = inf;
+ 353                          PbT.fx[n]$(out[n]) = PbT.l[n];
+ 354                          mu.fx[n,nn]$(exo_mu[n,nn]) = mu.l[n,nn];
+ 355                          PbT.lo[n]$(endo_PbT[n]) = -inf;
+ 356                          PbT.up[n]$(endo_PbT[n]) = inf;
+ 357                          solve PE_Example3 using CNS;
+ 358                          PE_Example3_modelstat = PE_Example3.modelstat; PE_Example3_solvestat = PE_Example3.solvestat;
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/08/20 09:38:25 Page 12
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 12
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Model Statistics    SOLVE test Using CNS From line 358
+Model Statistics    SOLVE PE_Example3 Using CNS From line 357
 
 
 MODEL STATISTICS
@@ -31,25 +32,25 @@ CODE LENGTH                 157
 SINGLE =E|X= EQUS            12     SINGLE UNFIXED VARS        12
 
 
-GENERATION TIME      =        0.000 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+GENERATION TIME      =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
 
 
-EXECUTION TIME       =        0.000 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/08/20 09:38:25 Page 13
+EXECUTION TIME       =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 13
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE test Using CNS From line 358
+Solution Report     SOLVE PE_Example3 Using CNS From line 357
 
 
                S O L V E      S U M M A R Y
 
-     MODEL   test                
+     MODEL   PE_Example3         
      TYPE    CNS                 
-     SOLVER  CONOPT4             FROM LINE  358
+     SOLVER  CONOPT4             FROM LINE  357
 
 **** SOLVER STATUS     1 Normal Completion         
 **** MODEL STATUS      16 Solved                   
 
- RESOURCE USAGE, LIMIT          0.000      1000.000
+ RESOURCE USAGE, LIMIT          0.015      1000.000
  ITERATION COUNT, LIMIT         1    2000000000
  EVALUATION ERRORS              0             0
 
@@ -74,7 +75,7 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
  ** Feasible solution to a square system.
  
  
- CONOPT time Total                            0.001 seconds
+ CONOPT time Total                            0.002 seconds
    of which: Function evaluations             0.000 =  0.0%
              1st Derivative evaluations       0.000 =  0.0%
  
@@ -83,12 +84,12 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
 **** REPORT SUMMARY :        0 INFEASIBLE
                              0  DEPENDENT
                              0     ERRORS
-
-
-EXECUTION TIME       =        0.000 SECONDS      2 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/08/20 09:38:25 Page 14
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 14
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
-Solution Report     SOLVE test Using CNS From line 358
+E x e c u t i o n
+
+
+EXECUTION TIME       =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
 
 
 USER: Medium MUD - 10 User License                   G200108/0001CA-WIN

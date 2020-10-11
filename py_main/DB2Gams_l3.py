@@ -7,16 +7,52 @@ class gams_model:
 	work_folder: Point to folder where the model should be run from. 
 	opt_file: Add options file. If None, a default options file is written (see default_opt).
 	"""
-	def __init__(self,work_folder,opt_file=None,execute_name='CollectAndRun.gms',settings=None):
-		self.work_folder = work_folder
-		self.execute_name = execute_name
-		self.dbs = {}
-		self.ws = GamsWorkspace(working_directory = self.work_folder)
-		if opt_file is None:
-			self.opt = default_opt(self.ws,name='temp.opt')
+	def __init__(self,work_folder=None,pickle_path=None,opt_file=None,execute_name='CollectAndRun.gms',settings=None,pickle_settings=None):
+		if pickle_path is None:
+			self.work_folder = work_folder if work_folder is not None else os.getcwd()
+			self.execute_name = execute_name
+			self.dbs = {}
+			self.ws = GamsWorkspace(working_directory = self.work_folder)
+			if opt_file is None:
+				self.opt = default_opt(self.ws,name='temp.opt')
+				opt_file = 'temp.opt'
+			else:
+				self.opt = self.ws.add_options(opt_file=opt_file)
+			self.settings = settings
+			self.export_settings = {'settings': 'settings_'+'settings_'+self.settings.name if pickle_settings is None else pickle_settings,
+									'out_db': None, 'opt': opt_file}
 		else:
-			self.opt = self.ws.add_options(opt_file=opt_file)
-		self.settings = settings
+			self.import_from_pickle(os.path.split(pickle_path)[0],os.path.split(pickle_path)[1],work_folder)
+
+	def import_from_pickle(self,repo,pickle_name,work_folder):
+		"""
+		Import gams_model object from pickle: 
+		(1) Add simple attributes (that are not special classes),
+		(2) Add workspace, opt files, databases (that are not pickleable) from settings.
+		"""
+		with open(repo+'\\'+end_w_pkl(pickle_name),"rb") as file:
+			self.__dict__.update(pickle.load(file).__dict__)
+		if work_folder is not None:
+			self.work_folder = work_folder
+		self.ws = GamsWorkspace(working_directory=self.work_folder)
+		self.opt = self.ws.add_options(opt_file=opt_file)
+		self.settings = gams_settings(pickle_path=self.export_settings['settings'])
+		self.out_db = DataBase.py_db(file_path=self.export_settings['out_db'],default_db='db_Gdx')
+		return self
+
+	def export(self,repo,pickle_name,inplace_db = False,**kwargs):
+		"""
+		Export gams_model instance. Note that only a subset of information are stored (not gams-objects in general).
+		"""
+		self.settings.export(repo,self.export_settings['settings'],inplace_db=inplace_db)
+		self.export_settings['out_db'] = self.out_db.export(repo,name=self.settings.name+'_out_db',**kwargs)
+		shutil.copy(self.work_folder+'\\'+self.export_settings['opt'],repo+'\\'+self.export_settings['opt'])
+		temp_empty_attrs = ('dbs','ws','out_db','opt','settings','job','out_db')
+		temp = {attr: getattr(self,attr) for attr in temp_empty_attrs}
+		[setattr(self,attr,None)for attr in temp_empty_attrs]
+		with open(repo+'\\'+end_w_pkl(pickle_name),"wb") as file:
+			pickle.dump(self,file)
+		[setattr(self,attr,temp[attr]) for attr in temp_empty_attrs];
 
 	def upd_databases(self,merge_internal=True,from_gdx=False):
 		"""
@@ -41,6 +77,9 @@ class gams_model:
 			self.add_job(options_add)
 		self.run_job(options_run)
 		self.out_db = DataBase.py_db(database_gdx=self.job.out_db,default_db='db_Gdx')
+		if self.settings.solvestat is True:
+			self.modelstat = self.out_db[self.settings.name+'_modelstat']
+			self.solvestat = self.out_db[self.settings.name+'_solvestat']
 
 	def solve_sneakily(self,db_star=None,from_cp=False,cp_init=None,run_from_job=False,shock_db=None,options_run={},kwargs_shock={}):
 		if from_cp is False:
@@ -145,10 +184,14 @@ class gams_model:
 				file.write("$UNFIX {gnames};\n\n".format(gnames=', '.join(self.settings.g_endo)))
 			if self.settings.blocks is not None:
 				file.write("$Model {mname} {blocks};\n\n".format(mname=self.settings.name, blocks=', '.join(self.settings.blocks)))
+			if self.settings.solvestat is True:
+				file.write(add_solvestat(self.settings.name))
 			if self.settings.solve is None:
 				file.write(default_solve(self.settings.name))
 			else:
 				file.write(self.settings.solve)
+			if self.settings.solvestat is True:
+				file.write(update_solvestat(self.settings.name))
 		self.settings.run_file = 'RunFile.gms'
 		self.settings.files['RunFile.gms'] = self.work_folder
 

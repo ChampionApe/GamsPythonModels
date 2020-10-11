@@ -75,7 +75,6 @@ class GPM_STA_PE:
 				DataBase.py_db.merge_dbs(self.model.database,tree.database,exceptions=[eval(f"tree.{attr}") for attr in nt.prune_trees if hasattr(tree,attr)])
 			self.calib_db = None if 'calib_db' not in kwargs else kwargs['calib_db']
 
-
 		def calibrate(self,name_base='baseline',name_calib='calib',solve_sneakily=True,type_='both',kwargs_ns={},kwargs_shock={}):
 			"""
 			Add subsets for calibration
@@ -153,7 +152,8 @@ class GPM_STA_PE:
 			{self.aux_write('mu',l='.fx')}$({self.aux_write('exo_mu')}) = {self.aux_write('mu',l='.l')};
 			{self.aux_write('PbT',l='.lo')}$({self.aux_write('endo_PbT')}) = -inf;
 			{self.aux_write('PbT',l='.up')}$({self.aux_write('endo_PbT')}) = inf;
-			solve {self.model.settings.name} using CNS;"""
+			solve {self.model.settings.name} using CNS;
+			{DB2Gams.update_solvestat(self.model.settings.name) if self.model.settings.solvestat is True else ''}"""
 
 		def create_model_instance(self,name='temp'):
 			"""

@@ -3,6 +3,19 @@ import pandas as pd
 from gams import *
 from dreamtools.gams_pandas import *
 
+def end_w_y(x,y):
+	if x.endswith(y):
+		return x
+	else:
+		return x+y
+def end_w_gdx(x):
+	return end_w_y(x,'.gdx')
+def end_w_gms(x):
+	return end_w_y(x,'.gms')
+def end_w_pkl(x):
+	return end_w_y(x,'.pkl')
+
+
 def type_gams(symbol):
 	if isinstance(symbol,gams.GamsVariable):
 		if len(symbol)==1:
@@ -485,6 +498,18 @@ class py_db:
 				db1.create_variable(name,data=symbol)
 		elif isinstance(db1,(db_pd,py_db)):
 			db1[name] = symbol
+
+	@staticmethod 
+	def export_db(db,repo,name=None,clean_up=True):
+		if clean_up is True:
+			db.default_db = 'db_pd'
+			db.merge_internal()
+		name = db.name if name is None else name
+		db.db_Gdx.export(repo+'\\'+end_w_gdx(name))
+		return repo+'\\'+end_w_gdx(name)
+
+	def export(self,repo,**kwargs):
+		self.export_db(self,repo,**kwargs)
 
 	###################################################################################################
 	###									3.1: READ IN FROM EXCEL	 									###

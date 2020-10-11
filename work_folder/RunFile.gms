@@ -1,7 +1,7 @@
-$FIX test_gtech, test_gexo;
+$FIX PE_Example3_gtech, PE_Example3_gexo;
 
-$UNFIX test_gendo;
+$UNFIX PE_Example3_gendo;
 
-$Model test M_s1_in, M_s1_out;
+$Model PE_Example3 M_s1_in, M_s1_out;
 
-solve test using CNS;
+scalars PE_Example3_modelstat, PE_Example3_solvestat;solve PE_Example3 using CNS;PE_Example3_modelstat = PE_Example3.modelstat; PE_Example3_solvestat = PE_Example3.solvestat;

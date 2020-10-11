@@ -43,9 +43,14 @@ def read_user_functions(default=True,file=False,text=False):
 	elif text is not False:
 		return text
 
+def add_solvestat(model):
+	return f"""scalars {model}_modelstat, {model}_solvestat;"""
+
+def update_solvestat(model):
+	return f"""{model}_modelstat = {model}.modelstat; {model}_solvestat = {model}.solvestat;"""
+
 def default_solve(model):
-	return """solve {a} using CNS;
-""".format(a=model)
+	return f"""solve {model} using CNS;"""
 
 def default_Root():
 	return """# Root File for model

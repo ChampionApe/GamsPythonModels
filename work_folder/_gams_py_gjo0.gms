@@ -7,4 +7,5 @@
 			mu.fx[n,nn]$(exo_mu[n,nn]) = mu.l[n,nn];
 			PbT.lo[n]$(endo_PbT[n]) = -inf;
 			PbT.up[n]$(endo_PbT[n]) = inf;
-			solve test using CNS;
+			solve PE_Example3 using CNS;
+			PE_Example3_modelstat = PE_Example3.modelstat; PE_Example3_solvestat = PE_Example3.solvestat;

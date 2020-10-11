@@ -6,7 +6,7 @@ class gams_settings:
 	"""
 	settings for gams model. The specific use can be read from the application in the gams_model class above.
 	"""
-	def __init__(self,name="somename",pickle_path=None,placeholders=None,databases=None,run_file=None,blocks=None,g_endo=[],g_exo=[],solve=None,files={},collect_file=None,collect_files=None,root_file=None,db_export=None):
+	def __init__(self,name="somename",pickle_path=None,placeholders=None,databases=None,run_file=None,blocks=None,g_endo=[],g_exo=[],solve=None,solvestat=True,files={},collect_file=None,collect_files=None,root_file=None,db_export=None):
 		if pickle_path is None:
 			self.name = name # Name of model instance
 			self.placeholders = placeholders
@@ -16,6 +16,7 @@ class gams_settings:
 			self.g_endo = g_endo
 			self.g_exo = g_exo
 			self.solve = solve
+			self.solvestat = solvestat
 			self.files = files
 			self.collect_file = collect_file
 			self.collect_files = collect_files
@@ -42,13 +43,9 @@ class gams_settings:
 			pickle.dump(self,file)
 		self.databases = temp
 
-	def export_db(self,repo,db):
+	def export_db(self,repo,db,**kwargs):
 		self.databases[db] = database_type(self.databases[db])
-		self.databases[db].default_db = 'db_pd'
-		self.databases[db].merge_internal()
-		self.databases[db].default_db = 'db_Gdx'
-		self.databases[db].db.export(repo+'\\'+end_w_gdx(db))
-		return repo+'\\'+end_w_gdx(db)
+		return self.databases[db].export(repo,**kwargs)
 
 	def write_collect_files(self,name):
 		"""

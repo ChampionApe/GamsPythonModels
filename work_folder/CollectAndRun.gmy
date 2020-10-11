@@ -7,12 +7,12 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_CollectFile.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\PE_Example3_CollectFile.gms
 # ----------------------------------------------------------------------------------------------------
 
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_functions.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\PE_Example3_functions.gms
 # ----------------------------------------------------------------------------------------------------
 
 
@@ -30,100 +30,100 @@ OPTION SYSOUT=OFF, SOLPRINT=OFF, LIMROW=0, LIMCOL=0, DECIMALS=6;
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_sets.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\PE_Example3_sets.gms
 # ----------------------------------------------------------------------------------------------------
 
 sets
-	alias_set
 	alias_map2
 	n
+	alias_set
 ;
 
 alias(n,nn,nnn);
 
 sets
-	inp[n]
-	map_s1_in[n,nn]
-	map_s1_out[n,nn]
-	i_kno_s1_out[n]
+	endo_PbT[n]
+	alias_[alias_set,alias_map2]
 	map_all[n,nn]
-	kno_out[n]
-	i_bra_o_s1_out[n]
 	exo_mu[n,nn]
+	i_kno_s1_out[n]
+	int[n]
+	i_bra_o_s1_in[n]
+	fg[n]
 	i_bra_no_s1_in[n]
 	t_out_s1_out[n]
-	i_bra_o_s1_in[n]
-	wT[n]
-	alias_[alias_set,alias_map2]
+	map_s1_in[n,nn]
+	kno_out[n]
 	t_out_s1_in[n]
-	fg[n]
-	i_bra_no_s1_out[n]
 	kno_inp[n]
-	i_kno_no_s1_in[n]
-	int[n]
-	endo_PbT[n]
-	i_kno_s1_in[n]
+	i_bra_no_s1_out[n]
 	out[n]
+	wT[n]
+	i_kno_s1_in[n]
+	i_kno_no_s1_in[n]
+	inp[n]
+	i_bra_o_s1_out[n]
+	map_s1_out[n,nn]
 ;
-$GDXIN %test%
+$GDXIN %PE_Example3%
 $onMulti
-$load alias_set
 $load alias_map2
 $load n
-$load inp
+$load alias_set
+$load endo_PbT
 $load i_kno_s1_out
-$load kno_out
+$load int
 $load i_bra_o_s1_in
-$load i_bra_o_s1_out
+$load fg
 $load i_bra_no_s1_in
 $load t_out_s1_out
-$load wT
 $load t_out_s1_in
-$load i_bra_no_s1_out
-$load fg
-$load kno_inp
-$load i_kno_no_s1_in
-$load int
-$load endo_PbT
-$load i_kno_s1_in
+$load kno_out
+$load wT
 $load out
-$load map_s1_in
-$load map_s1_out
+$load kno_inp
+$load i_bra_no_s1_out
+$load i_kno_s1_in
+$load i_kno_no_s1_in
+$load inp
+$load i_bra_o_s1_out
 $load map_all
-$load exo_mu
 $load alias_
+$load exo_mu
+$load map_s1_out
+$load map_s1_in
 $GDXIN
 $offMulti
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_parameters.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\PE_Example3_parameters.gms
 # ----------------------------------------------------------------------------------------------------
 
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_groups.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\PE_Example3_groups.gms
 # ----------------------------------------------------------------------------------------------------
 
 
-# ---------------------------------------------test_gtech---------------------------------------------
-#  Initialize test_gtech group
+# ------------------------------------------PE_Example3_gtech-----------------------------------------
+#  Initialize PE_Example3_gtech group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
-VARIABLE eta[n] "";
-eta.L[n]$((kno_out[n])) = 0;
 VARIABLE mu[n,nn] "";
 mu.L[n,nn]$((map_all[n,nn])) = 0;
 VARIABLE sigma[n] "";
 sigma.L[n]$((kno_inp[n])) = 0;
 VARIABLE mark_up[n] "";
 mark_up.L[n]$((out[n])) = 0;
+VARIABLE eta[n] "";
+eta.L[n]$((kno_out[n])) = 0;
 $onlisting
 
 
-# ----------------------------------------------test_gexo---------------------------------------------
-#  Initialize test_gexo group
+# ------------------------------------------PE_Example3_gexo------------------------------------------
+#  Initialize PE_Example3_gexo group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 VARIABLE PwT[n] "";
@@ -133,8 +133,8 @@ qS.L[n]$((out[n])) = 0;
 $onlisting
 
 
-# ---------------------------------------------test_gendo---------------------------------------------
-#  Initialize test_gendo group
+# ------------------------------------------PE_Example3_gendo-----------------------------------------
+#  Initialize PE_Example3_gendo group
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 VARIABLE PbT[n] "";
@@ -163,7 +163,7 @@ $onlisting
     parameter load_qD[n] "";
     load_qD[n]$(((wT[n]))) = 0;
   
-  execute_load "%test%" 
+  execute_load "%PE_Example3%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
@@ -192,25 +192,35 @@ $onlisting
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    parameter load_PwT[n] "";
-    load_PwT[n]$(((inp[n]))) = 0;
+    parameter load_mu[n,nn] "";
+    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
   
-    parameter load_qS[n] "";
-    load_qS[n]$(((out[n]))) = 0;
+    parameter load_sigma[n] "";
+    load_sigma[n]$(((kno_inp[n]))) = 0;
   
-  execute_load "%test%" 
+    parameter load_mark_up[n] "";
+    load_mark_up[n]$(((out[n]))) = 0;
+  
+    parameter load_eta[n] "";
+    load_eta[n]$(((kno_out[n]))) = 0;
+  
+  execute_load "%PE_Example3%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
- load_PwT=PwT.l  load_qS=qS.l ;
+ load_mu=mu.l  load_sigma=sigma.l  load_mark_up=mark_up.l  load_eta=eta.l ;
   
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    PwT.fx[n]$(((inp[n]))) = load_PwT[n];
+    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
   
-    qS.fx[n]$(((out[n]))) = load_qS[n];
+    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
+  
+    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
+  
+    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
 $onlisting
 ;
 $offlisting
@@ -225,41 +235,31 @@ $onlisting
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    parameter load_eta[n] "";
-    load_eta[n]$(((kno_out[n]))) = 0;
+    parameter load_PwT[n] "";
+    load_PwT[n]$(((inp[n]))) = 0;
   
-    parameter load_mu[n,nn] "";
-    load_mu[n,nn]$(((map_all[n,nn]))) = 0;
+    parameter load_qS[n] "";
+    load_qS[n]$(((out[n]))) = 0;
   
-    parameter load_sigma[n] "";
-    load_sigma[n]$(((kno_inp[n]))) = 0;
-  
-    parameter load_mark_up[n] "";
-    load_mark_up[n]$(((out[n]))) = 0;
-  
-  execute_load "%test%" 
+  execute_load "%PE_Example3%" 
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
- load_eta=eta.l  load_mu=mu.l  load_sigma=sigma.l  load_mark_up=mark_up.l ;
+ load_PwT=PwT.l  load_qS=qS.l ;
   
 # ----------------------------------------------------------------------------------------------------
 #  Loop over __load_group
 # ----------------------------------------------------------------------------------------------------
 
-    eta.fx[n]$(((kno_out[n]))) = load_eta[n];
+    PwT.fx[n]$(((inp[n]))) = load_PwT[n];
   
-    mu.fx[n,nn]$(((map_all[n,nn]))) = load_mu[n,nn];
-  
-    sigma.fx[n]$(((kno_inp[n]))) = load_sigma[n];
-  
-    mark_up.fx[n]$(((out[n]))) = load_mark_up[n];
+    qS.fx[n]$(((out[n]))) = load_qS[n];
 $onlisting
 ;
 ;
 
 # ----------------------------------------------------------------------------------------------------
-#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\test_blocks.gms
+#  Import file: C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\PE_Example3_blocks.gms
 # ----------------------------------------------------------------------------------------------------
 
 
@@ -312,19 +312,19 @@ E_pindex_s1_out, E_quant_o_s1_out, E_quant_no_s1_out
 # ----------------------------------------------------------------------------------------------------
 
 
-# ----------------------------------------------------------------------------------------------------$FIX test_gtech, test_gexo;
+# ----------------------------------------------------------------------------------------------------$FIX PE_Example3_gtech, PE_Example3_gexo;
 # ----------------------------------------------------------------------------------------------------
 $offlisting
-eta.FX[n]$((kno_out[n])) = eta.L[n];
 mu.FX[n,nn]$((map_all[n,nn])) = mu.L[n,nn];
 sigma.FX[n]$((kno_inp[n])) = sigma.L[n];
 mark_up.FX[n]$((out[n])) = mark_up.L[n];
+eta.FX[n]$((kno_out[n])) = eta.L[n];
 PwT.FX[n]$((inp[n])) = PwT.L[n];
 qS.FX[n]$((out[n])) = qS.L[n];
 $onlisting
 
 
-# ----------------------------------------------------------------------------------------------------$UNFIX test_gendo;
+# ----------------------------------------------------------------------------------------------------$UNFIX PE_Example3_gendo;
 # ----------------------------------------------------------------------------------------------------
 $offlisting
 PbT.lo[n]$((out[n])) = -inf;
@@ -337,12 +337,11 @@ $onlisting
 
 
 # ----------------------------------------------------------------------------------------------------
-#  Define test model
+#  Define PE_Example3 model
 # ----------------------------------------------------------------------------------------------------
-Model test /
+Model PE_Example3 /
 E_pindex_o_s1_in, E_pindex_no_s1_in, E_pindex_CD_o_s1_in, E_pindex_CD_no_s1_in, E_quant_o_s1_in, E_quant_no_s1_in, E_pindex_s1_out, E_quant_o_s1_out, E_quant_no_s1_out
 /;
 
 
-solve test using CNS;
-;
+scalars PE_Example3_modelstat, PE_Example3_solvestat;solve PE_Example3 using CNS;PE_Example3_modelstat = PE_Example3.modelstat; PE_Example3_solvestat = PE_Example3.solvestat;;
