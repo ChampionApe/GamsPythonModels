@@ -19,7 +19,7 @@ class gams_model:
 			else:
 				self.opt = self.ws.add_options(opt_file=opt_file)
 			self.settings = settings
-			self.export_settings = {'settings': 'settings_'+'settings_'+self.settings.name if pickle_settings is None else pickle_settings,
+			self.export_settings = {'settings': 'settings_'+self.settings.name if pickle_settings is None else pickle_settings,
 									'out_db': None, 'opt': opt_file}
 		else:
 			self.import_from_pickle(os.path.split(pickle_path)[0],os.path.split(pickle_path)[1],work_folder)
@@ -35,8 +35,8 @@ class gams_model:
 		if work_folder is not None:
 			self.work_folder = work_folder
 		self.ws = GamsWorkspace(working_directory=self.work_folder)
-		self.opt = self.ws.add_options(opt_file=opt_file)
-		self.settings = gams_settings(pickle_path=self.export_settings['settings'])
+		self.opt = self.ws.add_options(opt_file=repo+'\\'+self.export_settings['opt'])
+		self.settings = gams_settings(pickle_path=repo+'\\'+self.export_settings['settings'])
 		self.out_db = DataBase.py_db(file_path=self.export_settings['out_db'],default_db='db_Gdx')
 		return self
 
@@ -49,7 +49,7 @@ class gams_model:
 		shutil.copy(self.work_folder+'\\'+self.export_settings['opt'],repo+'\\'+self.export_settings['opt'])
 		temp_empty_attrs = ('dbs','ws','out_db','opt','settings','job','out_db')
 		temp = {attr: getattr(self,attr) for attr in temp_empty_attrs}
-		[setattr(self,attr,None)for attr in temp_empty_attrs]
+		[setattr(self,attr,None) for attr in temp_empty_attrs]
 		with open(repo+'\\'+end_w_pkl(pickle_name),"wb") as file:
 			pickle.dump(self,file)
 		[setattr(self,attr,temp[attr]) for attr in temp_empty_attrs];

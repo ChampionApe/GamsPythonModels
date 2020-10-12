@@ -148,24 +148,41 @@ class mgs:
 	def merge_collect_files(ls):
 		return [x for y in ls for x in y.collect_files]
 
-
-
 class gams_model_py:
 	"""
 	A Python object with all the information to write relevant files and settings for a gams_model instance.
 	This class has the writing methods included.
 	"""
-	def __init__(self,database,gsettings=None,blocks_text=None,functions=None,groups={},exceptions=[],exceptions_load=[],components = {},export_files = None,**kwargs):
-		self.main_db = database.name
-		if gsettings is None:
-			self.settings = gams_settings(name=database.name,placeholders={database.name: database.name},databases={database.name: database},files={})
-		self.groups = groups
-		self.exceptions=exceptions
-		self.exceptions_load = exceptions_load
-		self.components = components
-		self.export_files = export_files
-		self.blocks = blocks_text
-		self.functions = functions
+	def __init__(self,database=None,pickle_path=None,gsettings=None,blocks_text=None,functions=None,groups={},exceptions=[],exceptions_load=[],components = {},export_files = None,**kwargs):
+		if pickle_path is None:
+			self.main_db = database.name
+			if gsettings is None:
+				self.settings = gams_settings(name=database.name,placeholders={database.name: database.name},databases={database.name: database},files={})
+			self.groups = groups
+			self.exceptions=exceptions
+			self.exceptions_load = exceptions_load
+			self.components = components
+			self.export_files = export_files
+			self.blocks = blocks_text
+			self.functions = functions
+			self.export_settings = {'settings': 'settings_'+self.settings.name if 'pickle_settings' not in kwargs else kwargs['settings']}
+		else:
+			self.import_from_pickle(os.path.split(pickle_path)[0],os.path.split(pickle_path)[1])
+
+	def import_from_pickle(self,repo,pickle_name):
+		with open(repo+'\\'+end_w_pkl(pickle_name),"rb") as file:
+			self.__dict__.update(pickle.load(file).__dict__)
+		self.settings = gams_settings(pickle_path=repo+'\\'+self.export_settings['settings'])
+		return self
+
+	def export(self,repo,pickle_name):
+		self.settings.export(repo,self.export_settings['settings'])
+		temp_empty_attrs = ['settings']
+		temp = {attr: getattr(self,attr) for attr in temp_empty_attrs}
+		[setattr(self,attr,None) for attr in temp_empty_attrs]
+		with open(repo+'\\'+end_w_pkl(pickle_name),"wb") as file:
+			pickle.dump(self,file)
+		[setattr(self,attr,temp[attr]) for attr in temp_empty_attrs];
 
 	@property
 	def database(self):

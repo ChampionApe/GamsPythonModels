@@ -1,4 +1,4 @@
-import os, gams, numpy as np, pandas as pd, DataBase, COE, COE_settings, regex_gms, nesting_tree, DB2Gams,ShockFunction
+import os, gams, pickle, numpy as np, pandas as pd, DataBase, COE, COE_settings, regex_gms, nesting_tree, DB2Gams,ShockFunction
 
 def apply_type(type_,version):
 	return eval(f"COE.{type_}")(version=version)
@@ -59,21 +59,45 @@ class GPM_STA_PE:
 		"""
 		Production module using nesting trees.
 		"""
-		def __init__(self,nt,**kwargs):
-			self.version = nt.version
-			self.mark_up = True if 'mark_up' not in kwargs else kwargs['mark_up']
-			self.globals = {'sets': self.global_sets(nt), 'vars': self.global_vars(**kwargs)}
-			self.globals['doms'] = self.vars_domains(**kwargs)
-			self.locals = {tree: {attr: nt.trees[tree].__dict__[attr] for attr in nt.trees[tree].__dict__ if attr not in set(['tree','database']).union(nt.prune_trees)} for tree in nt.trees} # trees without database and actual tree
-			self.model = DB2Gams.gams_model_py(nt.database,**kwargs)
-			self.model_instances = {}
-			self.checkpoints = {}
-			self.initialized = False if 'initialized' not in kwargs else kwargs['initialized']
-			self.work_folder = os.getcwd() if 'work_folder' not in kwargs else kwargs['work_folder']
-			self.data_folder = os.getcwd() if 'data_folder' not in kwargs else kwargs['data_folder']
-			for tree in nt.trees.values(): # merge data 
-				DataBase.py_db.merge_dbs(self.model.database,tree.database,exceptions=[eval(f"tree.{attr}") for attr in nt.prune_trees if hasattr(tree,attr)])
-			self.calib_db = None if 'calib_db' not in kwargs else kwargs['calib_db']
+		def __init__(self,nt=None,pickle_path=None,**kwargs):
+			if pickle_path is None:
+				self.version = nt.version
+				self.mark_up = True if 'mark_up' not in kwargs else kwargs['mark_up']
+				self.globals = {'sets': self.global_sets(nt), 'vars': self.global_vars(**kwargs)}
+				self.globals['doms'] = self.vars_domains(**kwargs)
+				self.locals = {tree: {attr: nt.trees[tree].__dict__[attr] for attr in nt.trees[tree].__dict__ if attr not in set(['tree','database']).union(nt.prune_trees)} for tree in nt.trees} # trees without database and actual tree
+				self.model = DB2Gams.gams_model_py(database=nt.database,**kwargs)
+				self.model_instances = {}
+				self.checkpoints = {}
+				self.initialized = False if 'initialized' not in kwargs else kwargs['initialized']
+				self.work_folder = os.getcwd() if 'work_folder' not in kwargs else kwargs['work_folder']
+				self.data_folder = os.getcwd() if 'data_folder' not in kwargs else kwargs['data_folder']
+				for tree in nt.trees.values(): # merge data 
+					DataBase.py_db.merge_dbs(self.model.database,tree.database,exceptions=[eval(f"tree.{attr}") for attr in nt.prune_trees if hasattr(tree,attr)])
+				self.calib_db = None if 'calib_db' not in kwargs else kwargs['calib_db']
+				self.export_settings = {'model': 'model' if 'model' not in kwargs else kwargs[model],'model_instances': {}}
+			else:
+				self.import_from_pickle(os.path.split(pickle_path)[0],os.path.split(pickle_path)[1])
+
+		def import_from_pickle(self,repo,pickle_name):
+			with open(repo+'\\'+DB2Gams.end_w_pkl(pickle_name),"rb") as file:
+				self.__dict__.update(pickle.load(file).__dict__)
+			self.model = DB2Gams.gams_model_py(pickle_path=repo+'\\'+DB2Gams.end_w_pkl(self.export_settings['model']))
+			for mi in self.export_settings['model_instances']:
+				self.model_instances[mi] = DB2Gams.gams_model(pickle_path=repo+'\\'+DB2Gams.end_w_pkl(self.export_settings['model_instances'][mi]))
+
+		def export(self,pickle_name,repo=None):
+			if repo is None:
+				repo = self.data_folder
+			self.model.export(repo,self.export_settings['model'])
+			for mi in self.export_settings['model_instances']:
+				self.model_instances[mi].export(repo,self.export_settings['model_instances'][mi])
+			temp_empty_attrs = ('model','model_instances','checkpoints','calib_db')
+			temp = {attr: getattr(self,attr) for attr in temp_empty_attrs}
+			[setattr(self,attr,{}) for attr in temp_empty_attrs]
+			with open(repo+'\\'+DB2Gams.end_w_pkl(pickle_name),"wb") as file:
+				pickle.dump(self,file)
+			[setattr(self,attr,temp[attr]) for attr in temp_empty_attrs];
 
 		def calibrate(self,name_base='baseline',name_calib='calib',solve_sneakily=True,type_='both',kwargs_ns={},kwargs_shock={}):
 			"""
@@ -160,6 +184,7 @@ class GPM_STA_PE:
 			Create model instance with working-folder at repo.
 			"""
 			self.model_instances[name] = DB2Gams.gams_model(self.work_folder,settings=self.model.settings)
+			self.export_settings['model_instances'][name] = name
 
 		def df_run(self,name='temp',options_add={},options_run={},add_checkpoint=False):
 			if add_checkpoint is not False:

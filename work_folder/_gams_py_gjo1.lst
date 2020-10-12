@@ -1,41 +1,41 @@
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 15
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 15
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 C o m p i l a t i o n
 
 
  359  sets
- 360          l1
- 361          n
+ 360          n
+ 361          l1
  362  ;
  363   
  364   
  365  sets
  366          qS_subset[n]
- 367          PwT_subset[n]
- 368          qD_subset[n]
- 369          PbT_subset[n]
+ 367          qD_subset[n]
+ 368          PbT_subset[n]
+ 369          PwT_subset[n]
  370  ;
  371   
  372   
 GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
---- LOAD  l1 = 1:l1
 --- MERGE n = 2:n
+--- LOAD  l1 = 1:l1
 --- LOAD  qS_subset = 5:qS_subset
---- LOAD  PwT_subset = 3:PwT_subset
 --- LOAD  qD_subset = 9:qD_subset
 --- LOAD  PbT_subset = 7:PbT_subset
+--- LOAD  PwT_subset = 3:PwT_subset
  383   parameters
  384          PwT_loopval[n,l1]
- 385          PbT_loopval[n,l1]
- 386          qS_loopval[n,l1]
- 387          qD_loopval[n,l1]
+ 385          qS_loopval[n,l1]
+ 386          qD_loopval[n,l1]
+ 387          PbT_loopval[n,l1]
  388  ;
  389   
 GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
 --- LOAD  PwT_loopval = 4:PwT_loopval
---- LOAD  PbT_loopval = 8:PbT_loopval
 --- LOAD  qS_loopval = 6:qS_loopval
 --- LOAD  qD_loopval = 10:qD_loopval
+--- LOAD  PbT_loopval = 8:PbT_loopval
  397   loop( (l1),    PwT.fx[n]$(PwT_subset[n]) = PwT_loopval[n,l1];
  398          qS.fx[n]$(qS_subset[n]) = qS_loopval[n,l1];
  399          PbT.fx[n]$(PbT_subset[n]) = PbT_loopval[n,l1];
@@ -46,7 +46,7 @@ GDXIN   C:\Users\sxj477\Documents\GitHub\GamsPythonModels\work_folder\shock.gdx
  404   
  405  )
  406   
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 16
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 16
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Include File Summary
 
@@ -59,7 +59,7 @@ Include File Summary
 
 
 COMPILATION TIME     =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 17
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 17
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE PE_Example3 Using CNS From line 403
 
@@ -83,7 +83,7 @@ GENERATION TIME      =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
 EXECUTION TIME       =        0.016 SECONDS      4 MB  29.1.0 rbb4180b WEX-WEI
                L O O P S                 l1 l1_1
 
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 18
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 18
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE PE_Example3 Using CNS From line 403
 
@@ -97,7 +97,7 @@ Solution Report     SOLVE PE_Example3 Using CNS From line 403
 **** SOLVER STATUS     1 Normal Completion         
 **** MODEL STATUS      16 Solved                   
 
- RESOURCE USAGE, LIMIT          0.000      1000.000
+ RESOURCE USAGE, LIMIT          0.015      1000.000
  ITERATION COUNT, LIMIT         1    2000000000
  EVALUATION ERRORS              0             0
 
@@ -131,7 +131,7 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
 **** REPORT SUMMARY :        0 INFEASIBLE
                              0  DEPENDENT
                              0     ERRORS
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 19
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 19
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE PE_Example3 Using CNS From line 403
 
@@ -149,13 +149,13 @@ CODE LENGTH                 157
 SINGLE =E|X= EQUS            12     SINGLE UNFIXED VARS        12
 
 
-GENERATION TIME      =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
+GENERATION TIME      =        0.015 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
 
 
-EXECUTION TIME       =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
+EXECUTION TIME       =        0.015 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
                L O O P S                 l1 l1_2
 
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 20
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 20
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE PE_Example3 Using CNS From line 403
 
@@ -169,7 +169,7 @@ Solution Report     SOLVE PE_Example3 Using CNS From line 403
 **** SOLVER STATUS     5 Evaluation Interrupt      
 **** MODEL STATUS      6 Intermediate Infeasible   
 
- RESOURCE USAGE, LIMIT          0.140      1000.000
+ RESOURCE USAGE, LIMIT          0.000      1000.000
  ITERATION COUNT, LIMIT         0    2000000000
  EVALUATION ERRORS              4             0
 
@@ -195,9 +195,9 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
     Check bounds on variables.
  
  
- CONOPT time Total                            0.001 seconds
-   of which: Function evaluations             0.000 =  0.0%
-             1st Derivative evaluations       0.000 =  0.0%
+ CONOPT time Total                            0.002 seconds
+   of which: Function evaluations             0.001 = 50.0%
+             1st Derivative evaluations       0.001 = 50.0%
  
 
 **** ERRORS/WARNINGS IN EQUATION E_pindex_no_s1_in(Y)
@@ -211,7 +211,7 @@ CONOPT 4         29.1.0 rbb4180b Released Nov 15, 2019 WEI x86 64bit/MS Window
 
 **** ERRORS/WARNINGS IN EQUATION E_quant_no_s1_in(Y2)
      2 error(s): rPower: FUNC DOMAIN: x**y, x < 0 (RETURNED 0)
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 21
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 21
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Solution Report     SOLVE PE_Example3 Using CNS From line 403
 
@@ -222,14 +222,14 @@ Solution Report     SOLVE PE_Example3 Using CNS From line 403
                     MEAN        86.5499
                              0  DEPENDENT
                              4     ERRORS ( ****)
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 22
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 22
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Analysis      SOLVE PE_Example3 Using CNS From line 403
 
 
 **** Exec Error at line 272: rPower: FUNC DOMAIN: x**y, x < 0
 **** Exec Error at line 280: rPower: FUNC DOMAIN: x**y, x < 0
-GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/09/20 14:10:00 Page 23
+GAMS 29.1.0  rbb4180b Released Nov 15, 2019 WEX-WEI x86 64bit/MS Windows                                                                                                                                                              10/12/20 16:38:27 Page 23
 G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
 Model Statistics    SOLVE PE_Example3 Using CNS From line 403
 
@@ -252,7 +252,7 @@ GENERATION TIME      =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
 **** SOLVE from line 403 ABORTED, EXECERROR = 2
 
 
-EXECUTION TIME       =        0.000 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
+EXECUTION TIME       =        0.016 SECONDS      3 MB  29.1.0 rbb4180b WEX-WEI
 
 
 USER: Medium MUD - 10 User License                   G200108/0001CA-WIN
